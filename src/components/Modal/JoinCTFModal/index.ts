@@ -1,0 +1,1 @@
+export { JoinCTFModal } from './JoinCTFModal';

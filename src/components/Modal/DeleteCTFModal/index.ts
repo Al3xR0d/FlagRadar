@@ -1,0 +1,1 @@
+export { DeleteCTFModal } from './DeleteCTFModal';

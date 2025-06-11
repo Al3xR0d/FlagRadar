@@ -1,0 +1,1 @@
+export { AntdClose } from './AntdClose';
