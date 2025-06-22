@@ -1,0 +1,28 @@
+/* :root {
+  color: rgb(74, 74, 74);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: 0px;
+  background: #0e0e14;
+} */
+
+/* .ant-btn.ant-btn-primary {
+  margin-bottom: 16px;
+  background: #00ff9d;
+  color: #0e0e14;
+} */
+
+body,
+html,
+* {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+i.fas,
+i.fab,
+i.far,
+i.fa {
+  font-family: 'Font Awesome 6 Free' !important;
+}

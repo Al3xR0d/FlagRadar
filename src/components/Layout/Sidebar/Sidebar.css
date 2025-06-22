@@ -1,0 +1,15 @@
+.ant-layout .ant-menu.ant-menu-dark .ant-menu-item:hover {
+  background-color: rgba(0, 255, 157, 0.08);
+  color: #e0e0ff;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  background-color: rgba(0, 255, 157, 0.08);
+  color: #e0e0ff;
+}
+
+.custom-sider .ant-layout-sider-trigger {
+  background: #0e0e14;
+  border-top: 1px solid #25253a;
+  border-right: 1px solid #25253a;
+}
