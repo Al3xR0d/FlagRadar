@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCurrentUser } from '@/hooks/useQueries';
+import { useCurrentUser, useFetchRules } from '@/hooks/useQueries';
 import { Header } from '@/components/Layout/Header';
 import Card from 'antd/es/card';
 import Descriptions from 'antd/es/descriptions';
@@ -15,6 +15,7 @@ const UserPage: React.FC = () => {
   const { data, isLoading } = useCurrentUser();
   const [messageApi, contextHolder] = message.useMessage();
   const [isCreateVisible, setCreateVisible] = useState(false);
+  const currentRules = useFetchRules();
 
   const success = () => {
     messageApi.open({

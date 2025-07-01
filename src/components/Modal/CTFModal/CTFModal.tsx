@@ -55,6 +55,8 @@ export const CTFModal: React.FC<Props> = ({
     ...(regStart ? [{ title: 'НАЧАЛО РЕГИСТРАЦИИ', content: formatTime(regStart) }] : []),
     ...(regEnd ? [{ title: 'ОКОНЧАНИЕ РЕГИСТРАЦИИ', content: formatTime(regEnd) }] : []),
     ...(isAdmin && data?.tokens ? [{ title: 'ТОКЕНЫ', content: data?.tokens?.join('\n') }] : []),
+    // { title: 'КОМАНДЫ', content: 'Пока нет зарегистрированных команд' },
+    // { title: 'УЧАСТНИКИ', content: "Пока нет зарегистрированных участников" },
   ];
 
   return (

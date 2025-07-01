@@ -17,12 +17,12 @@ interface Props extends ModalBaseProps {}
 
 const ctfOptions = [
   {
-    value: 'Attack-Defense',
+    value: 'ad',
     label: 'Attack-Defense',
   },
   {
-    value: 'Task based',
-    label: 'Task based',
+    value: 'jeopardy',
+    label: 'Jeopardy (Task based)',
   },
 ];
 

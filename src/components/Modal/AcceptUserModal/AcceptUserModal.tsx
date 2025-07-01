@@ -23,8 +23,13 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
   const mutation = useAcceptUser();
 
   const handleSubmit = async () => {
-    if (!nickname.trim) {
+    if (accepted && nickname === '') {
       message.error('Введите никнейм');
+      return;
+    }
+
+    if (accepted && nickname.trim.length === 0) {
+      message.error('Введите валидный никнейм');
       return;
     }
 
@@ -54,6 +59,7 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
       width={800}
       onCancel={onClose}
       closable={false}
+      top={20}
       footer={
         <Flex justify="space-between" align="center">
           <Checkbox
@@ -71,7 +77,10 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
         <Form.Item style={{ color: '#e0e0ff' }}>
           <p>Прежде чем начать, ознакомьтесь с правилами платформы:</p>
         </Form.Item>
-        <Form.Item style={{ color: '#e0e0ff' }}>{rulesText || <CustomSpin />}</Form.Item>
+        <Form.Item style={{ color: '#e0e0ff' }}>
+          {' '}
+          <div style={{ whiteSpace: 'pre-line' }}>{rulesText || <CustomSpin />}</div>
+        </Form.Item>
         <Form.Item>
           <AntdInput
             placeholder="Введите никнейм"

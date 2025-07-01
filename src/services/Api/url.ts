@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://10.67.0.89:9999/sbcsm_flagradar/api/v1';
+export const API_BASE_URL = 'http://10.67.0.89:9999/sbcsm_flagradar/api/v2';
 // export const API_BASE_URL = 'http://141.101.151.37:9999/sbcsm_flagradar/api/v1';
 
 export const ME_URL = `${API_BASE_URL}/me`;

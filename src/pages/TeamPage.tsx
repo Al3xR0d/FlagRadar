@@ -20,7 +20,7 @@ const TeamPage: React.FC = () => {
 
   if (isLoadingTeam) return <CustomSpin />;
   return (
-    <>
+    <Flex vertical style={{ minHeight: '100vh' }}>
       {teamData ? (
         <>
           <Header title="Моя команда" />
@@ -54,10 +54,10 @@ const TeamPage: React.FC = () => {
               <JoinTeamModal visible={isJoinVisible} onClose={() => setJoinVisible(false)} />
             </>
           )}
-          <Footer />
         </Flex>
       )}
-    </>
+      <Footer />
+    </Flex>
   );
 };
 

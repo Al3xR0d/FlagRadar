@@ -24,8 +24,10 @@ export const fetchCurrentUserFull = async (): Promise<MeListResponse> => {
 export const fetchCTFs = async (): Promise<EventsListResponse> => api.GET(EVENTS_URL);
 
 export const createCTF = (data: Events) => api.POST<EventsListResponse>(EVENTS_URL, data);
-export const joinCTF = (token: string) => api.POST(`${EVENTS_URL}/join`, { token });
-export const leaveCTF = () => api.POST(`${EVENTS_URL}/leave`);
+export const joinCTF = ({ eventId, token }: { eventId: string; token: string }) =>
+  api.POST(`${EVENTS_URL}/${eventId}/join`, { token });
+export const leaveCTF = (eventId: string) =>
+  api.POST(`${EVENTS_URL}/${eventId}/leave`, { eventId });
 export const editCTF = (id: string, data: Events) =>
   api.PATCH<EventsListResponse>(`${EVENTS_URL}/${id}`, data);
 

@@ -13,6 +13,7 @@ import { Tags } from '@/shared/ui/Tags';
 import { useUserStore } from '@/store/userStore';
 import { formatTime } from '@/helpers/helpers';
 import { JoinCTFModal } from '@/components/Modal/JoinCTFModal';
+import { LeaveCTFModal } from '@/components/Modal/LeaveCTFModal';
 
 interface Props {
   isLoading: boolean;
@@ -40,13 +41,23 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
   const [selectedEvent, setSelectedEvent] = useState<Events | null>(null);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [isModalJoinOpen, setIsModalJoinOpen] = useState(false);
+  const [isModalLeaveOpen, setIsModalLeaveOpen] = useState(false);
 
   const user = useUserStore((store) => store.currentUser);
   const isCaptain = user?.properties === 'captain';
+  const userEvents = user?.events || [];
+
+  const isUserParticipating = (eventId: string) => {
+    return userEvents.includes(eventId);
+  };
 
   const handleNameClick = (event: Events) => {
     setSelectedEvent(event);
     setIsModalEditOpen(true);
+  };
+
+  const handleSaveCTF = (event: Events) => {
+    setSelectedEvent(event);
   };
 
   const handleModalEditClose = () => {
@@ -98,19 +109,37 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
       cs.push({
         title: 'ДЕЙСТВИЯ',
         key: 'actions',
-        render: (_, record: Events) => (
-          <AntdButton
-            onClick={() => {
-              setIsModalJoinOpen(true);
-            }}
-            text="Участвовать"
-          />
-        ),
+        render: (_, record: Events) => {
+          const isParticipating = isUserParticipating(record.name);
+
+          return (
+            <Space size="middle">
+              {!isParticipating && (
+                <AntdButton
+                  onClick={() => {
+                    handleSaveCTF(record);
+                    setIsModalJoinOpen(true);
+                  }}
+                  text="Участвовать"
+                />
+              )}
+              {isParticipating && (
+                <AntdCancelButton
+                  onClick={() => {
+                    handleSaveCTF(record);
+                    setIsModalLeaveOpen(true);
+                  }}
+                  text="Покинуть CTF"
+                />
+              )}
+            </Space>
+          );
+        },
       });
     }
 
     return cs;
-  }, [onEdit, onDelete]);
+  }, [onEdit, onDelete, isCaptain, userEvents]);
 
   return (
     <>
@@ -151,7 +180,16 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
         regEnd={selectedEvent?.reg_end}
         eventId={selectedEvent?.uuid}
       />
-      <JoinCTFModal onClose={() => setIsModalJoinOpen(false)} open={isModalJoinOpen} />
+      <JoinCTFModal
+        onClose={() => setIsModalJoinOpen(false)}
+        open={isModalJoinOpen}
+        eventId={selectedEvent?.uuid}
+      />
+      <LeaveCTFModal
+        onClose={() => setIsModalLeaveOpen(false)}
+        open={isModalLeaveOpen}
+        eventId={selectedEvent?.uuid}
+      />
     </>
   );
 };
