@@ -8,6 +8,7 @@ import { useQueryClient } from 'react-query';
 import { useEditTeam } from '@/hooks/useQueries';
 import { useUserStore } from '@/store/userStore';
 import { AntdModal } from '@/shared/ui/Modal';
+import { CustomSpin } from '@/shared/ui/Spin';
 
 interface Props {
   open: boolean;
@@ -50,6 +51,10 @@ export const EditTeamModal: React.FC<Props> = ({ open, onClose, name }) => {
       console.error('Validation failed:', error);
     }
   };
+
+  if (isLoading) {
+    return <CustomSpin />;
+  }
 
   return (
     <AntdModal

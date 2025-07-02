@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient, QueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient, UseQueryOptions } from 'react-query';
 import {
   fetchTeamParticipants,
   fetchTeams,
@@ -93,8 +93,11 @@ export const useTeamParticipantsQuery = () =>
 export const useTeamsQuery = () =>
   useQuery<TeamsListResponse>(['adminTeams'], fetchTeams, defaultQueryOptions);
 
-export const useUsersQuery = () =>
-  useQuery<UserListResponse>(['adminUsers'], fetchUsers, defaultQueryOptions);
+export const useUsersQuery = (options?: UseQueryOptions<UserListResponse, Error>) =>
+  useQuery<UserListResponse, Error>(['adminUsers'], fetchUsers, {
+    ...defaultQueryOptions,
+    ...options,
+  });
 
 export const useCreateCTF = () => {
   const qc = useQueryClient();

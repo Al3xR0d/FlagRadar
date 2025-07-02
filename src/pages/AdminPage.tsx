@@ -98,6 +98,8 @@ const AdminPage: React.FC = () => {
                   text={'Создать CTF'}
                 />
                 <AntdButton
+                  disabled={isCTFLoading}
+                  loading={isCTFLoading}
                   icon={<i className="fas fa-edit" />}
                   text={'Правила платформы'}
                   onClick={() => setShowRules(true)}
@@ -140,7 +142,6 @@ const AdminPage: React.FC = () => {
           onClose={() => setShowRules(false)}
           text={rulesData?.text ? rulesData?.text : ''}
         />
-        <Footer />
         <DeleteCTFModal
           open={showDeleteModal}
           onClose={() => {
@@ -149,6 +150,7 @@ const AdminPage: React.FC = () => {
           }}
           onClick={handleConfirmDelete}
         />
+        <Footer />
       </Flex>
     </>
   );

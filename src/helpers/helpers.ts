@@ -10,3 +10,14 @@ export const formatTime = (utcDateString: string) => {
 
   return `${day}.${month}.${year}, ${hours}:${minutes}:${seconds} (МСК)`;
 };
+
+export type nameType = 'ad' | 'jeopardy';
+
+export const editNameFormat = (name: nameType): string => {
+  const nameValues = {
+    ad: 'Attack-Defense',
+    jeopardy: 'Jeopardy (Task based)',
+  };
+
+  return nameValues[name];
+};

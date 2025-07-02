@@ -9,6 +9,7 @@ import { CustomSpin } from '@/shared/ui/Spin';
 import { AntdButton } from '@/shared/ui/Button';
 import Form from 'antd/es/form';
 import Flex from 'antd/es/flex';
+import Link from 'antd/es/typography/Link';
 
 interface Props {
   open: boolean;
@@ -28,13 +29,13 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
       return;
     }
 
-    if (accepted && nickname.trim.length === 0) {
+    if (accepted && nickname.trim().length === 0) {
       message.error('Введите валидный никнейм');
       return;
     }
 
     if (!accepted) {
-      message.error('Вы должны принять правила');
+      message.error('Вы должны принять правила и политику обработки персональных данных');
       return;
     }
 
@@ -67,7 +68,10 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
             onChange={(e) => setAccepted(e.target.checked)}
             style={{ color: '#e0e0ff', margin: '0' }}
           >
-            Я принимаю правила платформы
+            Я принимаю правила платформы{' '}
+            <Link href="https://www.sberbank.ru/privacy/policy#pdn" target="_blank">
+              и политику обработки персональных данных
+            </Link>
           </Checkbox>
           <AntdButton onClick={handleSubmit} text="Принять" />
         </Flex>

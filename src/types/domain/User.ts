@@ -7,6 +7,10 @@ export interface User {
   score_ctf: number;
   team_id: string;
   events: string[];
+  nickname?: string;
+  email?: string;
+  description?: string;
+  jwt?: string;
 }
 
 export interface UserListResponse {

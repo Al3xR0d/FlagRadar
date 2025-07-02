@@ -14,6 +14,8 @@ import { useUserStore } from '@/store/userStore';
 import { formatTime } from '@/helpers/helpers';
 import { JoinCTFModal } from '@/components/Modal/JoinCTFModal';
 import { LeaveCTFModal } from '@/components/Modal/LeaveCTFModal';
+import { editNameFormat, nameType } from '@/helpers/helpers';
+import Flex from 'antd/es/flex';
 
 interface Props {
   isLoading: boolean;
@@ -81,7 +83,12 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
         key: 'date',
         render: (data: string) => formatTime(data),
       },
-      { title: 'ФОРМАТ', dataIndex: 'event_format', key: 'eventFormat' },
+      {
+        title: 'ФОРМАТ',
+        dataIndex: 'event_format',
+        key: 'eventFormat',
+        render: (format: string) => editNameFormat(format as nameType),
+      },
       {
         title: 'СТАТУС',
         dataIndex: 'status',
@@ -97,10 +104,10 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
         title: 'ДЕЙСТВИЯ',
         key: 'actions',
         render: (_, record: Events) => (
-          <Space size="middle">
+          <Flex gap="middle">
             <AntdButton onClick={() => onEdit(record)} text="Редактировать" />
             <AntdCancelButton onClick={() => onDelete(record.uuid)} text="Удалить" />
-          </Space>
+          </Flex>
         ),
       });
     }

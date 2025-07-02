@@ -54,7 +54,6 @@ export const Sidebar = () => {
           justifyContent: collapsed ? 'center' : 'flex-start',
           padding: collapsed ? '0' : '0 24px',
           margin: '6px 0',
-          // color: '#fff',
           fontSize: 24,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
@@ -75,7 +74,6 @@ export const Sidebar = () => {
           <span
             style={{
               marginLeft: 8,
-              // height: 25,
               opacity: collapsed ? 0 : 1,
               transition: 'opacity 0.2s ease 0.1s',
               background: 'linear-gradient(90deg, #00FF9D 0%, #00FFEA 50%)',

@@ -7,6 +7,7 @@ import { useEditUser } from '@/hooks/useQueries';
 import { useForm } from 'antd/es/form/Form';
 import { useQueryClient } from 'react-query';
 import { AntdModal } from '@/shared/ui/Modal';
+import { CustomSpin } from '@/shared/ui/Spin';
 
 interface Props {
   visible: boolean;
@@ -50,6 +51,10 @@ export const EditUserModal: React.FC<Props> = ({
       console.error('Validation failed:', error);
     }
   };
+
+  if (isLoading) {
+    return <CustomSpin />;
+  }
 
   return (
     <AntdModal

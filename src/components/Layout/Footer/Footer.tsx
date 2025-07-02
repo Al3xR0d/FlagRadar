@@ -15,8 +15,8 @@ export const Footer: FC = () => {
       }}
     >
       <Flex justify="center">
-        <Link onClick={() => setIsModalOpen(true)} style={{ cursor: 'pointer' }}>
-          Политика, правила, соглашения и тд.
+        <Link href="https://www.sberbank.ru/privacy/policy#pdn" target="_blank">
+          Политика обработки персональных данных в ПАО Сбербанк
         </Link>
       </Flex>
       <PolicyModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />

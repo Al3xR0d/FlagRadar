@@ -27,6 +27,7 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
           await currentUserQuery.refetch();
           notification.success({ message: 'Вы присоеденились к CTF' });
           onClose();
+          setToken('');
         },
         onError: () => {
           notification.error({ message: 'Ошибка присоединения к CTF' });

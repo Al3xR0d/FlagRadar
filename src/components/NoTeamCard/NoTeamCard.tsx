@@ -15,7 +15,7 @@ export const NoTeamCard: FC<Props> = ({ onCreateTeam, onJoinTeam }) => {
       <span style={{ color: '#e0e0ff' }}>
         <p>У вас еще нет команды</p>
       </span>
-      <Flex vertical={true} gap={10}>
+      <Flex vertical={true} gap={'middle'}>
         <AntdButton
           onClick={onCreateTeam}
           icon={<i className="fa-solid fa-plus" style={{ marginRight: 8 }} />}
