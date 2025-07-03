@@ -8,6 +8,7 @@ import { AntdModal } from '@/shared/ui/Modal';
 import message from 'antd/es/message';
 import { useEditRules } from '@/hooks/useQueries';
 import { useUserStore } from '@/store/userStore';
+import { FormLabel } from '@/shared/ui/FormLabel';
 
 interface Props {
   open: boolean;
@@ -68,7 +69,7 @@ export const EditRulesModal: React.FC<Props> = ({ open, onClose, text }) => {
           />
         </Form.Item>
         <Checkbox checked={reaccept} onChange={(e) => setReaccept(e.target.checked)}>
-          <span style={{ color: '#e0e0ff' }}>Требуется заново принять правила</span>
+          <FormLabel>Требуется заново принять правила</FormLabel>
         </Checkbox>
       </AntdModal>
     </>

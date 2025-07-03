@@ -1,7 +1,13 @@
-import Card from 'antd/es/card';
+import styled from 'styled-components';
 import Flex from 'antd/es/flex';
 import { FC } from 'react';
 import { AntdButton } from '../../shared/ui/Button';
+import { Icon } from '@/shared/ui/Icon';
+import { StyledCard } from '@/shared/ui/StyledCard';
+
+const Wrapper = styled.span`
+  color: #e0e0ff;
+`;
 
 interface Props {
   onCreateTeam: () => void;
@@ -10,23 +16,23 @@ interface Props {
 
 export const NoTeamCard: FC<Props> = ({ onCreateTeam, onJoinTeam }) => {
   return (
-    <Card style={{ background: '#1a1a24', border: '1px solid #25253a' }}>
-      <i className="fas fa-users" style={{ marginBottom: 12, fontSize: 18, color: '#00FF9D' }} />
-      <span style={{ color: '#e0e0ff' }}>
+    <StyledCard>
+      <Icon className="fas fa-users" marginBottom="12" fontSize="20" />
+      <Wrapper>
         <p>У вас еще нет команды</p>
-      </span>
+      </Wrapper>
       <Flex vertical={true} gap={'middle'}>
         <AntdButton
           onClick={onCreateTeam}
-          icon={<i className="fa-solid fa-plus" style={{ marginRight: 8 }} />}
+          icon={<Icon className="fa-solid fa-plus" color="#0e0e14" fontSize="15" />}
           text={'Создать команду'}
         />
         <AntdButton
           onClick={onJoinTeam}
-          icon={<i className="fas fa-users" style={{ marginRight: 8 }} />}
+          icon={<Icon className="fas fa-users" color="#0e0e14" fontSize="15" />}
           text={'Присоединиться'}
         />
       </Flex>
-    </Card>
+    </StyledCard>
   );
 };

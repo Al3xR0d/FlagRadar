@@ -37,6 +37,8 @@ export const CreateTeamModal: React.FC<Props> = ({ visible, onClose }) => {
       iconClassName="fas fa-users"
       onCancel={onClose}
       showTitleDivider={false}
+      top={false}
+      centered
       footer={
         <>
           <AntdCloseButton key="cancel" onClick={onClose} text="Отмена" />
@@ -50,6 +52,5 @@ export const CreateTeamModal: React.FC<Props> = ({ visible, onClose }) => {
         placeholder="Название команды"
       />
     </AntdModal>
-    // </Modal>
   );
 };

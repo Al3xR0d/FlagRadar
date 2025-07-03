@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Flex from 'antd/es/flex';
 import List from 'antd/es/list';
 import { CreateTeamModal } from '@/components/Modal/CreateTeamModal';
 import { NoTeamCard } from '@/components/NoTeamCard';
@@ -10,6 +9,7 @@ import { Footer } from '@/components/Layout/Footer';
 import { useTeamByCurrentUser } from '@/hooks/useQueries';
 import { TeamCard } from '@/components/TeamCard';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { PageContainer } from '@/shared/ui/PageContainer';
 
 const TeamPage: React.FC = () => {
   const { data: teamData, isLoading: isLoadingTeam } = useTeamByCurrentUser();
@@ -20,7 +20,7 @@ const TeamPage: React.FC = () => {
 
   if (isLoadingTeam) return <CustomSpin />;
   return (
-    <Flex vertical style={{ minHeight: '100vh' }}>
+    <PageContainer vertical>
       {teamData ? (
         <>
           <Header title="Моя команда" />
@@ -33,7 +33,7 @@ const TeamPage: React.FC = () => {
           />
         </>
       ) : (
-        <Flex vertical style={{ minHeight: '100vh' }}>
+        <PageContainer vertical>
           <Header title="Моя команда" />
 
           {(data?.length || 0) > 0 && isLoading ? (
@@ -50,14 +50,21 @@ const TeamPage: React.FC = () => {
                 onCreateTeam={() => setCreateVisible(true)}
                 onJoinTeam={() => setJoinVisible(true)}
               />
-              <CreateTeamModal visible={isCreateVisible} onClose={() => setCreateVisible(false)} />
-              <JoinTeamModal visible={isJoinVisible} onClose={() => setJoinVisible(false)} />
+              {isCreateVisible && (
+                <CreateTeamModal
+                  visible={isCreateVisible}
+                  onClose={() => setCreateVisible(false)}
+                />
+              )}
+              {isJoinVisible && (
+                <JoinTeamModal visible={isJoinVisible} onClose={() => setJoinVisible(false)} />
+              )}
             </>
           )}
-        </Flex>
+        </PageContainer>
       )}
       <Footer />
-    </Flex>
+    </PageContainer>
   );
 };
 

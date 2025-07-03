@@ -9,6 +9,7 @@ import { useEditTeam } from '@/hooks/useQueries';
 import { useUserStore } from '@/store/userStore';
 import { AntdModal } from '@/shared/ui/Modal';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { FormLabel } from '@/shared/ui/FormLabel';
 
 interface Props {
   open: boolean;
@@ -72,7 +73,7 @@ export const EditTeamModal: React.FC<Props> = ({ open, onClose, name }) => {
       }
     >
       <Form form={form}>
-        <Form.Item name="name" label={<span style={{ color: '#e0e0ff' }}>Название</span>}>
+        <Form.Item name="name" label={<FormLabel>Название</FormLabel>}>
           <AntdInput />
         </Form.Item>
       </Form>

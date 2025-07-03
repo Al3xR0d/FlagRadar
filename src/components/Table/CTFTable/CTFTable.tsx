@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, memo } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import Space from 'antd/es/space';
 import Empty from 'antd/es/empty';
@@ -16,6 +16,7 @@ import { JoinCTFModal } from '@/components/Modal/JoinCTFModal';
 import { LeaveCTFModal } from '@/components/Modal/LeaveCTFModal';
 import { editNameFormat, nameType } from '@/helpers/helpers';
 import Flex from 'antd/es/flex';
+import { Icon } from '@/shared/ui/Icon';
 
 interface Props {
   isLoading: boolean;
@@ -39,7 +40,7 @@ const STATUS_TAG_TEXT_MAP: Record<EventsStatus, string> = {
   cancelled: 'Отменён',
 };
 
-export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChange }) => {
+export const CTFTable: FC<Props> = memo(({ isLoading, data, onEdit, onDelete, onChange }) => {
   const [selectedEvent, setSelectedEvent] = useState<Events | null>(null);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [isModalJoinOpen, setIsModalJoinOpen] = useState(false);
@@ -94,7 +95,7 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
         dataIndex: 'status',
         key: 'status',
         render: (_, record: Events) => {
-          return <Tags status={EventsStatus.ACTIVE} />;
+          return <Tags $status={EventsStatus.ACTIVE} />;
         },
       },
     ];
@@ -127,6 +128,7 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
                     handleSaveCTF(record);
                     setIsModalJoinOpen(true);
                   }}
+                  compact={false}
                   text="Участвовать"
                 />
               )}
@@ -161,7 +163,7 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
         onChange={onChange}
         title={() => (
           <span>
-            <i className="fas fa-database" style={{ marginRight: 8, color: '#00FF9D' }} />
+            <Icon className="fas fa-database" marginRight="8" />
             Ближайшие CTF
           </span>
         )}
@@ -172,31 +174,37 @@ export const CTFTable: FC<Props> = ({ isLoading, data, onEdit, onDelete, onChang
           ),
         }}
       />
-      <CTFModal
-        onClose={() => handleModalEditClose()}
-        open={isModalEditOpen}
-        name={selectedEvent?.name}
-        description={selectedEvent?.description}
-        date={selectedEvent?.date}
-        dateEnd={selectedEvent?.date_end}
-        place={selectedEvent?.place}
-        format={selectedEvent?.part_format}
-        eventFormat={selectedEvent?.event_format}
-        rules={selectedEvent?.ref_rules}
-        regStart={selectedEvent?.reg_start}
-        regEnd={selectedEvent?.reg_end}
-        eventId={selectedEvent?.uuid}
-      />
-      <JoinCTFModal
-        onClose={() => setIsModalJoinOpen(false)}
-        open={isModalJoinOpen}
-        eventId={selectedEvent?.uuid}
-      />
-      <LeaveCTFModal
-        onClose={() => setIsModalLeaveOpen(false)}
-        open={isModalLeaveOpen}
-        eventId={selectedEvent?.uuid}
-      />
+      {isModalEditOpen && (
+        <CTFModal
+          onClose={() => handleModalEditClose()}
+          open={isModalEditOpen}
+          name={selectedEvent?.name}
+          description={selectedEvent?.description}
+          date={selectedEvent?.date}
+          dateEnd={selectedEvent?.date_end}
+          place={selectedEvent?.place}
+          format={selectedEvent?.part_format}
+          eventFormat={selectedEvent?.event_format}
+          rules={selectedEvent?.ref_rules}
+          regStart={selectedEvent?.reg_start}
+          regEnd={selectedEvent?.reg_end}
+          eventId={selectedEvent?.uuid}
+        />
+      )}
+      {isModalJoinOpen && (
+        <JoinCTFModal
+          onClose={() => setIsModalJoinOpen(false)}
+          open={isModalJoinOpen}
+          eventId={selectedEvent?.uuid}
+        />
+      )}
+      {isModalLeaveOpen && (
+        <LeaveCTFModal
+          onClose={() => setIsModalLeaveOpen(false)}
+          open={isModalLeaveOpen}
+          eventId={selectedEvent?.uuid}
+        />
+      )}
     </>
   );
-};
+});

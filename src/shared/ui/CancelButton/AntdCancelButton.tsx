@@ -38,6 +38,7 @@ export const AntdCancelButton: FC<Props> = ({
 
 const StyledButton = styled(Button)`
   && {
+    min-width: 132px;
     max-width: 180px;
     background: #ff4d4f;
     color: #ffffff;

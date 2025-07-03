@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { AntdModal } from '@/shared/ui/Modal';
 import { AntdInput } from '@/shared/ui/Input';
 import Checkbox from 'antd/es/checkbox';
@@ -10,11 +11,21 @@ import { AntdButton } from '@/shared/ui/Button';
 import Form from 'antd/es/form';
 import Flex from 'antd/es/flex';
 import Link from 'antd/es/typography/Link';
+import { TextWrapper } from '@/shared/ui/TextWrapper';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const StyledCheckbox = styled(Checkbox)`
+  color: #e0e0ff;
+  margin: 0;
+`;
+
+const StyledFormItem = styled(Form.Item)`
+  color: #e0e0ff;
+`;
 
 export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
   const [nickname, setNickname] = useState('');
@@ -22,7 +33,6 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
 
   const rulesText = useUserStore((store) => store.rules);
   const mutation = useAcceptUser();
-
   const handleSubmit = async () => {
     if (accepted && nickname === '') {
       message.error('Введите никнейм');
@@ -63,28 +73,24 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
       top={20}
       footer={
         <Flex justify="space-between" align="center">
-          <Checkbox
-            checked={accepted}
-            onChange={(e) => setAccepted(e.target.checked)}
-            style={{ color: '#e0e0ff', margin: '0' }}
-          >
+          <StyledCheckbox checked={accepted} onChange={(e) => setAccepted(e.target.checked)}>
             Я принимаю правила платформы{' '}
             <Link href="https://www.sberbank.ru/privacy/policy#pdn" target="_blank">
               и политику обработки персональных данных
             </Link>
-          </Checkbox>
+          </StyledCheckbox>
           <AntdButton onClick={handleSubmit} text="Принять" />
         </Flex>
       }
     >
       <Form layout="vertical" preserve={false}>
-        <Form.Item style={{ color: '#e0e0ff' }}>
+        <StyledFormItem>
           <p>Прежде чем начать, ознакомьтесь с правилами платформы:</p>
-        </Form.Item>
-        <Form.Item style={{ color: '#e0e0ff' }}>
+        </StyledFormItem>
+        <StyledFormItem>
           {' '}
-          <div style={{ whiteSpace: 'pre-line' }}>{rulesText || <CustomSpin />}</div>
-        </Form.Item>
+          <TextWrapper>{rulesText || <CustomSpin />}</TextWrapper>
+        </StyledFormItem>
         <Form.Item>
           <AntdInput
             placeholder="Введите никнейм"

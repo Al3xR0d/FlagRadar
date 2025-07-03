@@ -77,15 +77,7 @@ export const AntdModal: FC<Props> = ({
       maskClosable={maskClosable}
       afterClose={afterClose}
       destroyOnHidden={destroyOnHidden}
-      footer={
-        footer ??
-        (handleSubmit && (
-          <>
-            <AntdCloseButton key="cancel" onClick={onCancel} text="Отмена" />
-            <AntdButton key="confirm" onClick={handleSubmit} text="Создать" />
-          </>
-        ))
-      }
+      footer={footer ?? null}
     >
       {children}
     </StyledModal>

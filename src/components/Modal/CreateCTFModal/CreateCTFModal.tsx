@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { AntdModal } from '@/shared/ui/Modal';
 import notification from 'antd/es/notification';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { CheckboxWrapper } from '@/shared/ui/CheckboxWrapper';
 
 interface Props extends ModalBaseProps {}
 
@@ -247,12 +249,7 @@ const FIELDS_META: Record<
       const [checked, setChecked] = useState(false);
 
       return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-          }}
+        <CheckboxWrapper
           onClick={() => {
             const newValue = !checked;
             setChecked(newValue);
@@ -262,125 +259,14 @@ const FIELDS_META: Record<
           <Form.Item name="is_private" valuePropName="checked" noStyle>
             <Checkbox checked={checked} />
           </Form.Item>
-          <span style={{ color: '#e0e0ff', marginLeft: 8 }}>Приватный CTF</span>
-        </div>
+          <FormLabel marginLeft="8">Приватный CTF</FormLabel>
+        </CheckboxWrapper>
       );
     },
   },
 };
 
-// const FIELD_LABELS: Record<string, string> = {
-//   eventName: 'Название',
-//   eventDescription: 'Описание',
-//   date: 'Дата начала',
-//   date_end: 'Дата окончания',
-//   eventFormat: 'Формат CTF',
-//   partFormat: 'Формат участия',
-//   eventPlace: 'Место проведения',
-//   eventRules: 'Правила CTF',
-//   teamLimit: 'Количество команд',
-//   memberLimit: 'Количество участников в команде',
-//   reg_start: 'Дата начала регистрации',
-//   reg_end: 'Дата окончания регистрации',
-//   isPrivate: 'Приватный CTF',
-// };
-
-// const FIELD_REQUIRED_MESSAGES: Record<string, string> = {
-//   eventName: 'Введите название',
-//   eventDescription: '',
-//   date: '',
-//   date_end: '',
-//   eventFormat: '',
-//   partFormat: '',
-//   eventPlace: '',
-//   eventRules: '',
-//   teamLimit: '',
-//   memberLimit: '',
-//   reg_start: '',
-//   reg_end: '',
-//   isPrivate: '',
-// };
-
-// const FIELD_RULES: Record<string, Rule[]> = {
-//   date: [
-//     {
-//       required: true,
-//       message: FIELD_REQUIRED_MESSAGES['date'],
-//     },
-//     ({ getFieldValue }) => ({
-//       validator(_, value) {
-//         const regEnd = getFieldValue('reg_end');
-
-//         if (value <= regEnd) {
-//           return Promise.reject(
-//             'Дата начала соревнования должна быть позже даты окончания регистрации',
-//           );
-//         }
-//         return Promise.resolve();
-//       },
-//     }),
-//   ],
-//   date_end: [
-//     { required: true, message: FIELD_REQUIRED_MESSAGES['date_end'] },
-//     ({ getFieldValue }) => ({
-//       validator(_, value) {
-//         if (!value || getFieldValue('date') < value) {
-//           return Promise.resolve();
-//         }
-//         return Promise.reject(new Error('Дата окончания должна быть позже даты начала'));
-//       },
-//     }),
-//   ],
-//   reg_end: [
-//     { required: true, message: FIELD_REQUIRED_MESSAGES['reg_end'] },
-//     ({ getFieldValue }) => ({
-//       validator(_, value) {
-//         const start = getFieldValue('date');
-//         const regStart = getFieldValue('reg_start');
-
-//         if (value <= regStart) {
-//           return Promise.reject(
-//             new Error('Дата окончания регистрации должна быть позже даты начала регистрации'),
-//           );
-//         }
-
-//         if (start && value >= start) {
-//           return Promise.reject(
-//             new Error('Дата окончания регистрации должна быть раньше даты начала соревнования'),
-//           );
-//         }
-
-//         return Promise.resolve();
-//       },
-//     }),
-//   ],
-//   isPrivate: [],
-// };
-
-// const FIELD_COMPONENT = {
-//   eventName: AntdInput,
-//   eventDescription: AntdInput,
-//   date: AntdInput,
-//   date_end: AntdInput,
-//   eventFormat: '',
-//   partFormat: '',
-//   eventPlace: AntdInput,
-//   eventRules: AntdInput,
-//   teamLimit: '',
-//   memberLimit: '',
-//   reg_start: '',
-//   reg_end: '',
-//   isPrivate: '',
-// };
-
-// const FIELD_COMPONENT_PROPS = {
-//   date: {
-//     type: 'datetime-local',
-//   },
-// };
-
 export const CreateCTFModal: React.FC<Props> = ({ open, onClose }) => {
-  // const [form] = useForm<Omit<Events, 'id'>>();
   const [form] = useForm<any>();
   const { mutate, isLoading } = useCreateCTF();
   const queryClient = useQueryClient();
@@ -420,42 +306,6 @@ export const CreateCTFModal: React.FC<Props> = ({ open, onClose }) => {
   };
 
   return (
-    // <Modal
-    //   title={
-    //     <>
-    //       <span style={{ color: '#e0e0ff' }}>
-    //         <i className="fas fa-flag" aria-hidden="true" style={{ marginRight: 8 }} />
-    //         Создать CTF
-    //       </span>
-    //       <div style={{ borderBottom: '1px solid #25253a', margin: '16px -24px 0' }}></div>
-    //     </>
-    //   }
-    //   style={{
-    //     top: 20,
-    //   }}
-    //   styles={{
-    //     header: {
-    //       background: '#1a1a24',
-    //       color: '#e0e0ff',
-    //     },
-    //     body: { background: '#1a1a24', color: '#e0e0ff' },
-    //     content: { background: '#1a1a24' },
-    //     mask: { backdropFilter: 'blur(5px)' },
-    //   }}
-    //   closeIcon={<AntdClose />}
-    //   open={open}
-    //   onCancel={onClose}
-    //   confirmLoading={isLoading}
-    //   maskClosable={false}
-    //   afterClose={() => form.resetFields()}
-    //   destroyOnHidden
-    //   footer={[
-    //     <>
-    //       <AntdCloseButton key="cancel" onClick={onClose} text="Отмена" />
-    //       <AntdButton key="create" onClick={handleSubmit} text="Создать" />,
-    //     </>,
-    //   ]}
-    // >
     <AntdModal
       titleText="Создать CTF"
       iconClassName="fas fa-flag"
@@ -489,7 +339,7 @@ export const CreateCTFModal: React.FC<Props> = ({ open, onClose }) => {
           return (
             <Form.Item
               name={field}
-              label={<span style={{ color: '#e0e0ff' }}>{label}</span>}
+              label={<FormLabel>{label}</FormLabel>}
               required={false}
               rules={rules || [{ required: true, message: requiredMessage }]}
               {...formItemProps}
@@ -499,170 +349,7 @@ export const CreateCTFModal: React.FC<Props> = ({ open, onClose }) => {
             </Form.Item>
           );
         })}
-
-        {/* <Form.Item
-          name="eventName"
-          label={<span style={{ color: '#e0e0ff' }}>Название</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите название' }]}
-        >
-          <AntdInput />
-        </Form.Item>
-        <Form.Item
-          name="eventDescription"
-          label={<span style={{ color: '#e0e0ff' }}>Описание</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите описание' }]}
-        >
-          <AntdInput />
-        </Form.Item>
-        <Form.Item
-          name="date"
-          label={<span style={{ color: '#e0e0ff' }}>Дата начала</span>}
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Укажите дату и время начала',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                const regEnd = getFieldValue('reg_end');
-
-                if (value <= regEnd) {
-                  return Promise.reject(
-                    'Дата начала соревнования должна быть позже даты окончания регистрации',
-                  );
-                }
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        >
-          <AntdInput type="datetime-local" />
-        </Form.Item>
-        <Form.Item
-          name="date_end"
-          label={<span style={{ color: '#e0e0ff' }}>Дата окончания</span>}
-          required={false}
-          rules={[
-            { required: true, message: 'Укажите дату и время окончания' },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('date') < value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Дата окончания должна быть позже даты начала'));
-              },
-            }),
-          ]}
-        >
-          <AntdInput type="datetime-local" />
-        </Form.Item>
-        <Form.Item
-          name="eventFormat"
-          label={<span style={{ color: '#e0e0ff' }}>Формат CTF</span>}
-          required={false}
-          rules={[{ required: true, message: 'Выберите формат CTF' }]}
-        >
-          <AntdSelect options={ctfOptions} />
-        </Form.Item>
-        <Form.Item
-          name="partFormat"
-          label={<span style={{ color: '#e0e0ff' }}>Формат участия</span>}
-          required={false}
-          rules={[{ required: true, message: 'Выберите формат участия' }]}
-        >
-          <AntdSelect options={participationOptions} />
-        </Form.Item>
-        <Form.Item
-          name="eventPlace"
-          label={<span style={{ color: '#e0e0ff' }}>Место проведения</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите место проведения' }]}
-        >
-          <AntdInput />
-        </Form.Item>
-        <Form.Item
-          name="eventRules"
-          label={<span style={{ color: '#e0e0ff' }}>Правила CTF</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите правила CTF' }]}
-        >
-          <AntdInput />
-        </Form.Item>
-        <Form.Item
-          name="teamLimit"
-          label={<span style={{ color: '#e0e0ff' }}>Количество команд</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите количество команд' }]}
-        >
-          <AntdInput type="number" min={2} max={Infinity} />
-          // <InputNumber />
-        </Form.Item>
-        <Form.Item
-          name="memberLimit"
-          label={<span style={{ color: '#e0e0ff' }}>Количество участников в команде</span>}
-          required={false}
-          rules={[{ required: true, message: 'Введите количество участников в команде' }]}
-        >
-          <AntdInput type="number" min={1} max={Infinity} />
-          // <InputNumber />
-        </Form.Item>
-        <Form.Item
-          name="reg_start"
-          label={<span style={{ color: '#e0e0ff' }}>Дата начала регистрации</span>}
-          required={false}
-          rules={[
-            {
-              required: true,
-              message: 'Укажите дату и время начала регистрации',
-            },
-          ]}
-        >
-          <AntdInput type="datetime-local" />
-        </Form.Item>
-        <Form.Item
-          name="reg_end"
-          label={<span style={{ color: '#e0e0ff' }}>Дата окончания регистрации</span>}
-          required={false}
-          rules={[
-            { required: true, message: 'Укажите дату окончания регистрации' },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                const start = getFieldValue('date');
-                const regStart = getFieldValue('reg_start');
-
-                if (value <= regStart) {
-                  return Promise.reject(
-                    new Error(
-                      'Дата окончания регистрации должна быть позже даты начала регистрации',
-                    ),
-                  );
-                }
-
-                if (start && value >= start) {
-                  return Promise.reject(
-                    new Error(
-                      'Дата окончания регистрации должна быть раньше даты начала соревнования',
-                    ),
-                  );
-                }
-
-                return Promise.resolve();
-              },
-            }),
-          ]}
-        >
-          <AntdInput type="datetime-local" />
-        </Form.Item>
-        <Form.Item name="isPrivate" valuePropName="checked">
-          <Checkbox>
-            <span style={{ color: '#e0e0ff' }}>Приватный CTF</span>
-          </Checkbox>
-        </Form.Item> */}
       </Form>
     </AntdModal>
-    // </Modal>
   );
 };

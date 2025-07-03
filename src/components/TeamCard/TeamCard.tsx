@@ -1,11 +1,18 @@
 import { FC, useState } from 'react';
-import Card from 'antd/es/card';
+import styled from 'styled-components';
 import { AntdButton } from '@/shared/ui/Button';
 import { EditTeamModal } from '../Modal/EditTeamModal';
 import { AntdCancelButton } from '@/shared/ui/CancelButton';
 import Flex from 'antd/es/flex';
 import { LeaveTeamModal } from '../Modal/LeaveTeamModal';
 import { useUserStore } from '@/store/userStore';
+import { Icon } from '@/shared/ui/Icon';
+import { StyledCard } from '@/shared/ui/StyledCard';
+
+const Wrapper = styled.span`
+  color: #e0e0ff;
+  font-size: 18px;
+`;
 
 interface Props {
   name: string;
@@ -24,12 +31,9 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
 
   return (
     <>
-      <Card style={{ background: '#1a1a24', border: '1px solid #25253a' }}>
-        <i
-          className="fas fa-users"
-          style={{ marginBottom: 12, fontSize: '18px', color: '#00FF9D' }}
-        />
-        <span style={{ color: '#e0e0ff', fontSize: '18px' }}>
+      <StyledCard>
+        <Icon className="fas fa-users" fontSize="20" marginBottom="12" />
+        <Wrapper>
           <p>{name}</p>
           <p>{`BB: ${scoreBB}`}</p>
           <p>{`CTF: ${scoreCTF}`}</p>
@@ -40,7 +44,7 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
               <li key={index}>{member}</li>
             ))}
           </ul>
-        </span>
+        </Wrapper>
         <Flex gap="large">
           {(isCaptain && members.length === 1) || !isCaptain ? (
             <AntdCancelButton
@@ -61,7 +65,7 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
             <></>
           )}
         </Flex>
-      </Card>
+      </StyledCard>
       <EditTeamModal
         open={isCreateVisibleButton}
         onClose={() => setCreateVisibleButton(false)}

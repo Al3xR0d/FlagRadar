@@ -8,6 +8,7 @@ import { useForm } from 'antd/es/form/Form';
 import { useQueryClient } from 'react-query';
 import { AntdModal } from '@/shared/ui/Modal';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { FormLabel } from '@/shared/ui/FormLabel';
 
 interface Props {
   visible: boolean;
@@ -71,17 +72,17 @@ export const EditUserModal: React.FC<Props> = ({
       }
     >
       <Form form={form}>
-        <Form.Item name="nickname" label={<span style={{ color: '#e0e0ff' }}>Никнейм</span>}>
+        <Form.Item name="nickname" label={<FormLabel>Никнейм</FormLabel>}>
           <AntdInput />
         </Form.Item>
         <Form.Item
           name="email"
-          label={<span style={{ color: '#e0e0ff' }}>Личный email</span>}
+          label={<FormLabel>Личный email</FormLabel>}
           rules={[{ type: 'email' }]}
         >
           <AntdInput />
         </Form.Item>
-        <Form.Item name="description" label={<span style={{ color: '#e0e0ff' }}>О себе</span>}>
+        <Form.Item name="description" label={<FormLabel>О себе</FormLabel>}>
           <AntdInput.TextArea />
         </Form.Item>
       </Form>

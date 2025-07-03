@@ -3,6 +3,7 @@ import Empty from 'antd/es/empty';
 import { User } from '@/types';
 import { AntdTable } from '@/shared/ui/Table';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { Icon } from '@/shared/ui/Icon';
 
 interface Props {
   isLoading: boolean;
@@ -33,7 +34,7 @@ export const UsersTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
       onChange={onChange}
       title={() => (
         <span>
-          <i className="fas fa-database" style={{ marginRight: 8, color: '#00FF9D' }}></i>
+          <Icon className="fas fa-database" marginRight="8" />
           Пользователи
         </span>
       )}

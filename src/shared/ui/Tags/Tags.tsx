@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { EventsStatus } from '@/types/domain/Events';
 
 interface HackTagProps {
-  status: EventsStatus;
+  $status: EventsStatus;
   children?: React.ReactNode;
 }
 
@@ -34,20 +34,20 @@ const statusStyles = {
   `,
 };
 
-const Tag = styled.span<{ status: EventsStatus }>`
+const Tag = styled.span<{ $status: EventsStatus }>`
   display: inline-block;
   padding: 4px 12px;
   border-radius: 60px;
   letter-spacing: 1.5px;
   font-size: 0.7rem;
   user-select: none;
-  ${(props) => statusStyles[props.status]}
+  ${(props) => statusStyles[props.$status]}
   transition: box-shadow 0.3s ease;
 
   &:hover {
     box-shadow: 0 0 8px
       ${(props) => {
-        switch (props.status) {
+        switch (props.$status) {
           case 'active':
             return '#00ff9d';
           case 'pending':
@@ -70,6 +70,6 @@ const STATUS_TEXT_MAP: Record<EventsStatus, string> = {
   cancelled: 'Отменён',
 };
 
-export const Tags: FC<HackTagProps> = ({ status }) => {
-  return <Tag status={status}>{STATUS_TEXT_MAP[status]}</Tag>;
+export const Tags: FC<HackTagProps> = ({ $status }) => {
+  return <Tag $status={$status}>{STATUS_TEXT_MAP[$status]}</Tag>;
 };

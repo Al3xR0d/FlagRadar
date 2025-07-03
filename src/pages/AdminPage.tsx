@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import Divider from 'antd/es/divider';
 import { CTFTable } from '@/components/Table/CTFTable';
 import { TeamsTable } from '@/components/Table/TeamsTable';
@@ -21,6 +22,12 @@ import { EditRulesModal } from '@/components/Modal/EditRulesModal';
 import { Footer } from '@/components/Layout/Footer';
 import message from 'antd/es/message';
 import { DeleteCTFModal } from '@/components/Modal/DeleteCTFModal';
+import { Icon } from '@/shared/ui/Icon';
+import { PageContainer } from '@/shared/ui/PageContainer';
+
+const Wrapper = styled.span`
+  margin-bottom: 10px;
+`;
 
 const AdminPage: React.FC = () => {
   const { data: ctfData, isLoading: isCTFLoading } = useCtfQuery();
@@ -80,32 +87,37 @@ const AdminPage: React.FC = () => {
 
   return (
     <>
-      <Flex vertical style={{ minHeight: '100vh' }}>
+      <PageContainer vertical>
         <Header
           title="Админошная"
           button={
-            <span
-              style={{
-                marginBottom: '10px',
-              }}
-            >
+            <Wrapper>
               <Flex gap="small">
                 <AntdButton
                   disabled={isCTFLoading}
                   loading={isCTFLoading}
                   onClick={() => setShowCreate(true)}
-                  icon={<i className="fa-solid fa-plus" style={{ marginRight: 8 }} />}
+                  icon={
+                    <Icon
+                      className="fa-solid fa-plus"
+                      color="#0e0e14"
+                      marginRight="0"
+                      fontSize="15"
+                    />
+                  }
                   text={'Создать CTF'}
                 />
                 <AntdButton
                   disabled={isCTFLoading}
                   loading={isCTFLoading}
-                  icon={<i className="fas fa-edit" />}
+                  icon={
+                    <Icon className="fas fa-edit" color="#0e0e14" marginRight="0" fontSize="15" />
+                  }
                   text={'Правила платформы'}
                   onClick={() => setShowRules(true)}
                 />
               </Flex>
-            </span>
+            </Wrapper>
           }
         />
         <div ref={ctfRef}>
@@ -133,25 +145,30 @@ const AdminPage: React.FC = () => {
             onChange={onUsersTableChange}
           />
         </div>
-        <CreateCTFModal open={showCreate} onClose={() => setShowCreate(false)} />
+        {showCreate && <CreateCTFModal open={showCreate} onClose={() => setShowCreate(false)} />}
+
         {editRec && (
           <EditCTFModal open={!!editRec} record={editRec} onClose={() => setEditRec(null)} />
         )}
-        <EditRulesModal
-          open={showRules}
-          onClose={() => setShowRules(false)}
-          text={rulesData?.text ? rulesData?.text : ''}
-        />
-        <DeleteCTFModal
-          open={showDeleteModal}
-          onClose={() => {
-            setShowDeleteModal(false);
-            setToDeleteId(null);
-          }}
-          onClick={handleConfirmDelete}
-        />
+        {showRules && (
+          <EditRulesModal
+            open={showRules}
+            onClose={() => setShowRules(false)}
+            text={rulesData?.text ? rulesData?.text : ''}
+          />
+        )}
+        {showDeleteModal && (
+          <DeleteCTFModal
+            open={showDeleteModal}
+            onClose={() => {
+              setShowDeleteModal(false);
+              setToDeleteId(null);
+            }}
+            onClick={handleConfirmDelete}
+          />
+        )}
         <Footer />
-      </Flex>
+      </PageContainer>
     </>
   );
 };

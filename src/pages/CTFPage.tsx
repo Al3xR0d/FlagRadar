@@ -3,7 +3,7 @@ import { CTFTable } from '../components/Table/CTFTable/CTFTable';
 import { useCtfQuery } from '@/hooks/useQueries';
 import { Header } from '@/components/Layout/Header';
 import { Footer } from '@/components/Layout/Footer';
-import Flex from 'antd/es/flex';
+import { PageContainer } from '@/shared/ui/PageContainer';
 
 const CTFPage: React.FC = () => {
   const { data, isLoading } = useCtfQuery();
@@ -20,13 +20,13 @@ const CTFPage: React.FC = () => {
 
   return (
     <>
-      <Flex vertical style={{ minHeight: '100vh' }}>
+      <PageContainer vertical>
         <Header title="CTF" />
         <div ref={ctfRef}>
           <CTFTable isLoading={isLoading} data={data?.data ?? []} onChange={onCtfTableChange} />
         </div>
         <Footer />
-      </Flex>
+      </PageContainer>
     </>
   );
 };

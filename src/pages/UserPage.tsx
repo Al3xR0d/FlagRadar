@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { useCurrentUser, useFetchRules } from '@/hooks/useQueries';
 import { Header } from '@/components/Layout/Header';
-import Card from 'antd/es/card';
 import Descriptions from 'antd/es/descriptions';
 import { CopyOutlined } from '@ant-design/icons';
 import { AntdButton } from '@/shared/ui/Button';
@@ -10,6 +10,12 @@ import message from 'antd/es/message';
 import { EditUserModal } from '@/components/Modal/EditUserModal';
 import { Footer } from '@/components/Layout/Footer';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { PageContainer } from '@/shared/ui/PageContainer';
+import { StyledCard } from '@/shared/ui/StyledCard';
+
+const StyledDescriptions = styled(Descriptions)`
+  background: #1a1a24;
+`;
 
 const UserPage: React.FC = () => {
   const { data, isLoading } = useCurrentUser();
@@ -30,12 +36,12 @@ const UserPage: React.FC = () => {
 
   return (
     <>
-      <Flex vertical style={{ minHeight: '100vh' }}>
+      <PageContainer vertical>
         {contextHolder}
         <Header title="Профиль" />
-        <Card style={{ background: '#1a1a24', border: '1px solid #25253a' }}>
+        <StyledCard>
           <Flex gap="middle" vertical>
-            <Descriptions bordered column={1} style={{ background: '#1a1a24' }}>
+            <StyledDescriptions bordered column={1}>
               <Descriptions.Item
                 label="Никнейм"
                 style={{ color: '#e0e0ff', border: '1px solid #25253a' }}
@@ -75,23 +81,25 @@ const UserPage: React.FC = () => {
                   </Flex>
                 </Flex>
               </Descriptions.Item>
-            </Descriptions>
+            </StyledDescriptions>
             <AntdButton
               icon={<i className="fas fa-edit" />}
               text="Редактировать"
               onClick={() => setCreateVisible(true)}
             />
           </Flex>
-        </Card>
-        <EditUserModal
-          visible={isCreateVisible}
-          onClose={() => setCreateVisible(false)}
-          nickname={data?.nickname}
-          email={data?.email}
-          description={data?.description}
-        />
+        </StyledCard>
+        {isCreateVisible && (
+          <EditUserModal
+            visible={isCreateVisible}
+            onClose={() => setCreateVisible(false)}
+            nickname={data?.nickname}
+            email={data?.email}
+            description={data?.description}
+          />
+        )}
         <Footer />
-      </Flex>
+      </PageContainer>
     </>
   );
 };

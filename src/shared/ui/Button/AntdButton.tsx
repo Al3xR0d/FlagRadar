@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import Button from 'antd/es/button';
 import styled from 'styled-components';
 import { ButtonType } from 'antd/es/button';
+import type { ButtonProps } from 'antd';
 
 interface Props {
   disabled?: boolean;
@@ -11,6 +12,11 @@ interface Props {
   icon?: ReactNode;
   text?: string;
   key?: string;
+  compact?: boolean;
+}
+
+interface StyledButtonProps {
+  $compact?: boolean;
 }
 
 export const AntdButton: FC<Props> = ({
@@ -20,6 +26,7 @@ export const AntdButton: FC<Props> = ({
   onClick,
   icon,
   text,
+  compact = true,
 }) => {
   return (
     <StyledButton
@@ -29,6 +36,7 @@ export const AntdButton: FC<Props> = ({
         onClick();
         (e.currentTarget as HTMLElement).blur();
       }}
+      $compact={compact}
     >
       {icon}
       {text}
@@ -36,8 +44,9 @@ export const AntdButton: FC<Props> = ({
   );
 };
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<StyledButtonProps>`
   && {
+    min-width: ${({ $compact }) => ($compact ? 'unset' : '132px')};
     max-width: 180px;
     background: #00ff9d;
     color: #0e0e14;

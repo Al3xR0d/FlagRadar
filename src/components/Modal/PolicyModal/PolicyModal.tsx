@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { AntdModal } from '@/shared/ui/Modal';
 import { useUserStore } from '@/store/userStore';
+import { TextWrapper } from '@/shared/ui/TextWrapper';
 
 interface Props {
   open: boolean;
@@ -20,7 +21,7 @@ export const PolicyModal: FC<Props> = ({ open, onClose }) => {
         width={900}
         footer={<></>}
       >
-        <div style={{ whiteSpace: 'pre-line' }}>{curRules}</div>
+        <TextWrapper>{curRules}</TextWrapper>
       </AntdModal>
     </>
   );

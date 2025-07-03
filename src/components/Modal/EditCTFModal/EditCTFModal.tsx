@@ -13,6 +13,8 @@ import { useQueryClient } from 'react-query';
 import { ComponentType } from 'react';
 import { AntdModal } from '@/shared/ui/Modal';
 import notification from 'antd/es/notification';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { CheckboxWrapper } from '@/shared/ui/CheckboxWrapper';
 
 const ctfOptions = [
   {
@@ -246,12 +248,7 @@ const FIELDS_META: Record<
       const [checked, setChecked] = useState(false);
 
       return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-          }}
+        <CheckboxWrapper
           onClick={() => {
             const newValue = !checked;
             setChecked(newValue);
@@ -261,8 +258,8 @@ const FIELDS_META: Record<
           <Form.Item name="is_private" valuePropName="checked" noStyle>
             <Checkbox checked={checked} />
           </Form.Item>
-          <span style={{ color: '#e0e0ff', marginLeft: 8 }}>Приватный CTF</span>
-        </div>
+          <FormLabel marginLeft="8">Приватный CTF</FormLabel>
+        </CheckboxWrapper>
       );
     },
   },
@@ -365,7 +362,7 @@ export const EditCTFModal: FC<Props> = ({ open, onClose, record }) => {
           return (
             <Form.Item
               name={field}
-              label={<span style={{ color: '#e0e0ff' }}>{label}</span>}
+              label={<FormLabel>{label}</FormLabel>}
               required={false}
               rules={rules || [{ required: true, message: requiredMessage }]}
               {...formItemProps}

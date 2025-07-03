@@ -29,17 +29,17 @@ const StyledSelect = styled(Select)`
     }
 
     &.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
-      border-color: #00ff9d !important;
+      border-color: #00ff9d;
       box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.2);
     }
   }
 
-  .ant-select-arrow {
+  && .ant-select-arrow {
     color: #e0e0ff;
   }
 
-  .ant-select-selection-item,
-  .ant-select-selection-placeholder {
+  && .ant-select-selection-item,
+  && .ant-select-selection-placeholder {
     color: #e0e0ff;
   }
 

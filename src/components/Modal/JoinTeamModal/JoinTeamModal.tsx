@@ -34,6 +34,8 @@ export const JoinTeamModal: React.FC<Props> = ({ visible, onClose }) => {
       iconClassName="fas fa-sign-in-alt"
       onCancel={onClose}
       showTitleDivider={false}
+      top={false}
+      centered
       footer={
         <>
           <AntdCloseButton key="cancel" onClick={onClose} text="Отмена" />

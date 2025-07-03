@@ -5,6 +5,7 @@ import { Teams } from '@/types';
 import { TeamModal } from '@/components/Modal/TeamModal';
 import { AntdLink } from '@/shared/ui/Link';
 import { CustomSpin } from '@/shared/ui/Spin';
+import { Icon } from '@/shared/ui/Icon';
 
 interface Props {
   isLoading: boolean;
@@ -58,7 +59,7 @@ export const TeamsTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
         onChange={onChange}
         title={() => (
           <span>
-            <i className="fas fa-database" style={{ marginRight: 8, color: '#00FF9D' }}></i>
+            <Icon className="fas fa-database" marginRight="8" />
             Команды
           </span>
         )}
@@ -69,13 +70,15 @@ export const TeamsTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
           ),
         }}
       />
-      <TeamModal
-        onClose={() => handleModalClose()}
-        open={isModalOpen}
-        name={selectedTeam?.name}
-        token={selectedTeam?.token}
-        members={selectedTeam?.members}
-      />
+      {isModalOpen && (
+        <TeamModal
+          onClose={() => handleModalClose()}
+          open={isModalOpen}
+          name={selectedTeam?.name}
+          token={selectedTeam?.token}
+          members={selectedTeam?.members}
+        />
+      )}
     </>
   );
 };

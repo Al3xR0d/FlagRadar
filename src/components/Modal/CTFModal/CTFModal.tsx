@@ -1,4 +1,5 @@
 import Modal from 'antd/es/modal/Modal';
+import styled from 'styled-components';
 import { AntdClose } from '@/shared/ui/Close';
 import Card from 'antd/es/card';
 import Col from 'antd/es/col';
@@ -11,6 +12,8 @@ import { editNameFormat, nameType } from '@/helpers/helpers';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { useUsersQuery } from '@/hooks/useQueries';
 import { AntdTable } from '@/shared/ui/Table';
+import { FormLabel } from '@/shared/ui/FormLabel';
+import { TextWrapper } from '@/shared/ui/TextWrapper';
 
 interface Props {
   open: boolean;
@@ -27,6 +30,32 @@ interface Props {
   regEnd?: string;
   eventId?: string;
 }
+
+const ContentWrapper = styled.div`
+  padding: 16px 0;
+`;
+
+const FlexCol = styled(Col)`
+  display: flex;
+`;
+
+const StyledCard = styled(Card)`
+  background: #0e0e14;
+  border: 1px solid #25253a;
+  color: #e0e0ff;
+  flex: 1;
+
+  & .ant-card-head {
+    border-bottom: none;
+    padding: 0 16px;
+    background: #0e0e14;
+  }
+  & .ant-card-body {
+    padding: 16px;
+    background: #0e0e14;
+    flex: 1;
+  }
+`;
 
 export const CTFModal: React.FC<Props> = ({
   open,
@@ -102,7 +131,7 @@ export const CTFModal: React.FC<Props> = ({
             title: 'КОМАНДЫ',
             content:
               uniqueTeamIds.length > 0 ? (
-                <div style={{ whiteSpace: 'pre-line' }}>{uniqueTeamIds.join('\n')}</div>
+                <TextWrapper>{uniqueTeamIds.join('\n')}</TextWrapper>
               ) : (
                 'Пока нет зарегистрированных команд'
               ),
@@ -135,7 +164,7 @@ export const CTFModal: React.FC<Props> = ({
         centered
         open={open}
         onCancel={onClose}
-        title={<span style={{ color: '#e0e0ff' }}>{name}</span>}
+        title={<FormLabel>{name}</FormLabel>}
         closeIcon={<AntdClose />}
         destroyOnHidden
         maskClosable={false}
@@ -156,31 +185,11 @@ export const CTFModal: React.FC<Props> = ({
         }}
         footer={null}
       >
-        <div style={{ padding: '16px 0' }}>
+        <ContentWrapper>
           <Row gutter={[16, 16]}>
             {cardData.map((card, index) => (
-              <Col key={index} xs={24} sm={12} md={8} style={{ display: 'flex' }}>
-                <Card
-                  title={<span style={{ color: '#8a8aa8' }}>{card.title}</span>}
-                  style={{
-                    background: '#0e0e14',
-                    border: '1px solid #25253a',
-                    color: '#e0e0ff',
-                    flex: 1,
-                  }}
-                  styles={{
-                    header: {
-                      borderBottom: 'none',
-                      padding: '0 16px',
-                      background: '#0e0e14',
-                    },
-                    body: {
-                      padding: '16px',
-                      background: '#0e0e14',
-                      flex: 1,
-                    },
-                  }}
-                >
+              <FlexCol key={index} xs={24} sm={12} md={8}>
+                <StyledCard title={<FormLabel color="#8a8aa8">{card.title}</FormLabel>}>
                   {card.isLink && card.content ? (
                     <AntdLink href={card.content} target="_blank">
                       {card.content}
@@ -188,11 +197,11 @@ export const CTFModal: React.FC<Props> = ({
                   ) : (
                     card.content
                   )}
-                </Card>
-              </Col>
+                </StyledCard>
+              </FlexCol>
             ))}
           </Row>
-        </div>
+        </ContentWrapper>
       </Modal>
     </>
   );
