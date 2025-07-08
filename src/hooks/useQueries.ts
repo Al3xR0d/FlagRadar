@@ -26,6 +26,7 @@ import {
   fetchResults,
   uploadResults,
   deleteResults,
+  fetchResultsTeamYears,
 } from '../services/Api';
 import {
   User,
@@ -283,5 +284,12 @@ export const useDeleteResults = () => {
         placement: 'topRight',
       });
     },
+  });
+};
+
+export const useTeamsRaiting = ({ year, page }: { year: number; page: number }) => {
+  return useQuery({
+    queryKey: ['teamsRaiting', year, page],
+    queryFn: () => fetchResultsTeamYears(year, page),
   });
 };

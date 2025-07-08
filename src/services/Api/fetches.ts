@@ -10,6 +10,7 @@ import {
   AccessMeRequest,
   MeListResponse,
   ResultsListResponse,
+  ResultsTeamsYearsResponse,
 } from '@/types';
 import {
   EVENTS_URL,
@@ -89,4 +90,7 @@ export const uploadResults = (eventId: string, jsonData: object) => {
   });
 };
 export const deleteResults = (eventId: string) => api.DELETE(`${EVENTS_URL}/${eventId}/results`);
-export const fetchResultsTeamYears = () => api.GET(`${RAITING_URL}/teams`);
+export const fetchResultsTeamYears = async (
+  year: number,
+  page: number,
+): Promise<ResultsTeamsYearsResponse> => api.GET(`${RAITING_URL}/teams?year=${year}&page=${page}`);

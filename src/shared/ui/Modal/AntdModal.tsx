@@ -2,8 +2,6 @@ import { FC, ReactNode } from 'react';
 import styled from 'styled-components';
 import Modal from 'antd/es/modal';
 import { AntdClose } from '@/shared/ui/Close';
-import { AntdButton } from '@/shared/ui/Button';
-import { AntdCloseButton } from '@/shared/ui/CloseButton';
 
 interface Props {
   open: boolean;

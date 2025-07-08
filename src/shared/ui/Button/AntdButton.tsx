@@ -37,10 +37,6 @@ export const AntdButton: FC<Props> = ({
       loading={loading}
       type={type}
       disabled={disabled}
-      // onClick={(e) => {
-      //   if (onClick) onClick();
-      //   (e.currentTarget as HTMLElement).blur();
-      // }}
       onClick={onClick}
       $compact={compact}
     >

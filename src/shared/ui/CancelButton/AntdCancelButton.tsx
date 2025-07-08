@@ -36,10 +36,6 @@ export const AntdCancelButton: FC<Props> = ({
     <StyledButton
       loading={loading}
       type={type}
-      // onClick={(e) => {
-      //   onClick();
-      //   (e.currentTarget as HTMLElement).blur();
-      // }}
       onClick={onClick}
       $compact={compact}
       disabled={disabled}

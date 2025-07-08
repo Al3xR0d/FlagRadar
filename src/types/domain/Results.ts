@@ -11,6 +11,20 @@ export interface Results {
   tasks: null | Tasks[];
 }
 
+export interface ResultsTeamsYearsResponse {
+  data: ResultsTeamsYears[];
+  msg: string;
+  result: string;
+}
+
+export interface ResultsTeamsYears {
+  ctf_score: number;
+  members: MembersResultsTeamsYears[];
+  num_ctf: number;
+  team_id: string;
+  teamname: string;
+}
+
 interface Tasks {
   name: string;
   difficult: number;
@@ -49,4 +63,9 @@ interface ServiceInfo {
   fp: number;
   name: string;
   sla: number;
+}
+
+interface MembersResultsTeamsYears {
+  nickname: string;
+  user_id: string;
 }

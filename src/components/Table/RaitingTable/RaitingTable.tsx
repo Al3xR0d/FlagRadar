@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useRef, useMemo } from 'react';
 import { AntdTable } from '@/shared/ui/Table';
 import { AntdSelect } from '@/shared/ui/Select';
 import { Icon } from '@/shared/ui/Icon';
@@ -6,6 +6,7 @@ import { CustomSpin } from '@/shared/ui/Spin';
 import Empty from 'antd/es/empty';
 import { ColumnsType } from 'antd/es/table';
 import { AntdTabs } from '@/shared/ui/Tabs';
+import { useTeamsRaiting } from '@/hooks/useQueries';
 
 interface TeamRating {
   place: number;
@@ -14,10 +15,11 @@ interface TeamRating {
   participation: number;
 }
 
-interface Props {
-  isLoading: boolean;
-  data?: any;
-  onChange?: (pagination: any, filters: any, sorter: any, extra: any) => void;
+interface PersonalRating {
+  place: number;
+  name: string;
+  score: number;
+  participation: number;
 }
 
 interface Option {
@@ -25,41 +27,34 @@ interface Option {
   label: string;
 }
 
-export const RaitingTable: FC<Props> = ({ isLoading }) => {
+interface Props {
+  onChange?: (pagination: any, filters: any, sorter: any, extra: any) => void;
+}
+
+export const RaitingTable: FC<Props> = ({ onChange }) => {
+  console.count('RaitingTable render');
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
-  //   const [data, setData] = useState<TeamRating[]>([]);
-  //   const [years, setYears] = useState<Option[]>([]);
-  const [data] = useState<TeamRating[]>([
-    { place: 1, teamName: 'Команда 1', score: 100, participation: 3 },
-    { place: 2, teamName: 'Команда 2', score: 90, participation: 2 },
-    { place: 3, teamName: 'Команда 3', score: 80, participation: 1 },
-  ]);
-  const [years] = useState<Option[]>([
+  const [teamPage, setTeamPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
+
+  const teamTableRef = useRef<HTMLDivElement>(null);
+  const userTableRef = useRef<HTMLDivElement>(null);
+
+  const pageSize = 10;
+
+  const { data: teamsData, isLoading: isTeamsLoading } = useTeamsRaiting({
+    year: parseInt(selectedYear),
+    page: teamPage,
+  });
+
+  const years: Option[] = [
     { value: new Date().getFullYear().toString(), label: new Date().getFullYear().toString() },
     { value: '2023', label: '2023' },
     { value: '2022', label: '2022' },
     { value: '2021', label: '2021' },
-  ]);
+  ];
 
-  // Загрузка списка годов при монтировании компонента
-  // useEffect(() => {
-  //   fetch('/api/years') // Предполагаемый эндпоинт для списка годов
-  //     .then((response) => response.json())
-  //     .then((data: number[]) =>
-  //       setYears(data.map((year) => ({ value: year.toString(), label: year.toString() })))
-  //     .catch((error) => console.error('Ошибка загрузки годов:', error));
-  // }, []);
-
-  // Загрузка данных рейтинга при смене года
-  // useEffect(() => {
-  //   fetch(`/api/rating?year=${selectedYear}`) // Предполагаемый эндпоинт для рейтинга
-  //     .then((response) => response.json())
-  //     .then((data) => setData(data))
-  //     .catch((error) => console.error('Ошибка загрузки рейтинга:', error));
-  // }, [selectedYear]);
-
-  const teamsColumns: ColumnsType = [
-    ////// необхидимо добавить типы, наподобии ColumnsType<Teams>
+  const teamsColumns: ColumnsType<TeamRating> = [
     {
       title: 'Место',
       dataIndex: 'place',
@@ -86,8 +81,7 @@ export const RaitingTable: FC<Props> = ({ isLoading }) => {
     },
   ];
 
-  const usersColumns: ColumnsType = [
-    ////// необхидимо добавить типы, наподобии ColumnsType<Teams>
+  const usersColumns: ColumnsType<PersonalRating> = [
     {
       title: 'Место',
       dataIndex: 'place',
@@ -114,61 +108,86 @@ export const RaitingTable: FC<Props> = ({ isLoading }) => {
     },
   ];
 
+  const teamTableData = useMemo(() => {
+    return (
+      teamsData?.data?.map((team, index) => ({
+        place: (teamPage - 1) * pageSize + index + 1,
+        teamName: team.teamname,
+        score: team.ctf_score,
+        participation: team.num_ctf,
+      })) || []
+    );
+  }, [teamsData, teamPage]);
+
+  const userTableData = useMemo(
+    () =>
+      teamsData?.data
+        ?.flatMap((team) =>
+          team.members.map((member, memberIndex) => ({
+            place: (userPage - 1) * pageSize + memberIndex + 1,
+            name: member.nickname,
+            score: team.ctf_score,
+            participation: team.num_ctf,
+          })),
+        )
+        .slice((userPage - 1) * pageSize, userPage * pageSize) || [],
+    [teamsData, userPage],
+  );
+
+  const totalTeams = teamsData?.data?.length || 0;
+  const totalUsers = teamsData?.data?.reduce((acc, team) => acc + team.members.length, 0) || 0;
+
+  const handleTeamTableChange = (pagination: any) => {
+    setTeamPage(pagination.current);
+    if (teamTableRef.current) {
+      teamTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (onChange) {
+      onChange(pagination, {}, {}, {});
+    }
+  };
+
+  const handleUserTableChange = (pagination: any) => {
+    setUserPage(pagination.current);
+    if (userTableRef.current) {
+      userTableRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    if (onChange) {
+      onChange(pagination, {}, {}, {});
+    }
+  };
+
   return (
     <>
       <AntdSelect
         options={years}
         value={selectedYear}
-        onChange={(value) => setSelectedYear(value)}
+        onChange={(value) => {
+          setSelectedYear(value);
+          setTeamPage(1);
+          setUserPage(1);
+        }}
         style={{ width: 120, marginBottom: 16 }}
+        placeholder="Выберите год"
       />
-      {/* <Tabs
-        defaultActiveKey="1"
-        items={[
-          {
-            label: 'Команды',
-            key: '1',
-            children: (
-              <AntdTable
-                loading={{
-                  spinning: isLoading,
-                  indicator: <CustomSpin />,
-                }}
-                dataSource={data}
-                columns={columns}
-                rowKey="place"
-                title={() => <Icon className="fas fa-ranking-star" />}
-                pagination={{ pageSize: 10 }}
-                locale={{
-                  emptyText: (
-                    <Empty
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
-                      description="Результаты за указанный год отсутствуют"
-                    />
-                  ),
-                }}
-              />
-            ),
-          },
-          {
-            label: 'Пользователи',
-            key: '2',
-            children: 'Tab 2',
-          },
-        ]}
-      ></Tabs> */}
       <AntdTabs>
         <AntdTabs.TabPane tab="Команды" key="1">
           <AntdTable
             loading={{
-              spinning: isLoading,
+              spinning: isTeamsLoading,
               indicator: <CustomSpin />,
             }}
-            dataSource={data}
+            dataSource={teamTableData}
             columns={teamsColumns}
             rowKey="place"
             title={() => <Icon className="fas fa-ranking-star" />}
-            pagination={{ pageSize: 10 }}
+            pagination={{
+              current: teamPage,
+              pageSize,
+              showSizeChanger: false,
+              disabled: isTeamsLoading || teamTableData.length === 0,
+              total: totalTeams,
+            }}
             locale={{
               emptyText: (
                 <Empty
@@ -177,19 +196,26 @@ export const RaitingTable: FC<Props> = ({ isLoading }) => {
                 />
               ),
             }}
+            onChange={handleTeamTableChange}
           />
         </AntdTabs.TabPane>
         <AntdTabs.TabPane tab="Пользователи" key="2">
           <AntdTable
             loading={{
-              spinning: isLoading,
+              spinning: isTeamsLoading,
               indicator: <CustomSpin />,
             }}
-            dataSource={data}
+            dataSource={userTableData}
             columns={usersColumns}
-            rowKey="place"
+            rowKey="name"
             title={() => <Icon className="fas fa-ranking-star" />}
-            pagination={{ pageSize: 10 }}
+            pagination={{
+              current: userPage,
+              pageSize,
+              showSizeChanger: false,
+              disabled: isTeamsLoading || userTableData.length === 0,
+              total: totalUsers,
+            }}
             locale={{
               emptyText: (
                 <Empty
@@ -198,6 +224,7 @@ export const RaitingTable: FC<Props> = ({ isLoading }) => {
                 />
               ),
             }}
+            onChange={handleUserTableChange}
           />
         </AntdTabs.TabPane>
       </AntdTabs>

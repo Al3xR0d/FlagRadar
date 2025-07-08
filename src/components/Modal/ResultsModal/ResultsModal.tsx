@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 import { AntdModal } from '@/shared/ui/Modal';
 import { AntdCloseButton } from '@/shared/ui/CloseButton';
-import { AntdButton } from '@/shared/ui/Button';
-import { UploadOutlined } from '@ant-design/icons';
-import { AntdInput } from '@/shared/ui/Input';
-import message from 'antd/es/message';
 import { ResultsListResponse } from '@/types/domain/Results';
 import { AntdLink } from '@/shared/ui/Link';
 import { CustomSpin } from '@/shared/ui/Spin';
@@ -18,7 +14,6 @@ interface Props {
 }
 
 export const ResultsModal: FC<Props> = ({ open, onClose, results, isLoading, isError }) => {
-  console.log('results:', results);
   return (
     <AntdModal
       titleText="Результаты"
@@ -30,7 +25,6 @@ export const ResultsModal: FC<Props> = ({ open, onClose, results, isLoading, isE
       footer={
         <>
           <AntdCloseButton key="close" onClick={onClose} text="Отмена" />
-          {/* <AntdButton key="confirm" onClick={() => {}} text="Сохранить" /> */}
         </>
       }
     >
@@ -57,7 +51,6 @@ export const ResultsModal: FC<Props> = ({ open, onClose, results, isLoading, isE
           </ul>
         </>
       )}
-      {/* <AntdInput.TextArea placeholder="Ссылка на разбор" /> */}
     </AntdModal>
   );
 };
