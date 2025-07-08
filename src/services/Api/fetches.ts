@@ -9,9 +9,23 @@ import {
   EditedRules,
   AccessMeRequest,
   MeListResponse,
+  ResultsListResponse,
 } from '@/types';
-import { EVENTS_URL, TEAM_PARTICIPANTS_URL, ME_URL, USER_URL, TEAM_URL, RULES_URL } from './url';
+import {
+  EVENTS_URL,
+  TEAM_PARTICIPANTS_URL,
+  ME_URL,
+  USER_URL,
+  TEAM_URL,
+  RULES_URL,
+  RAITING_URL,
+} from './url';
 import { api } from './api';
+
+interface FetchResultsParams {
+  eventId: string;
+  formData: FormData;
+}
 
 export const fetchCurrentUser = async (): Promise<Me> => {
   const response = await api.GET(ME_URL);
@@ -63,3 +77,16 @@ export const fecthRules = async (): Promise<Rules> => {
 };
 export const editRules = (data: EditedRules) => api.POST(RULES_URL, data);
 export const acceptUser = (data: AccessMeRequest) => api.POST(`${RULES_URL}/accept`, data);
+export const fetchResults = async (eventId: string): Promise<ResultsListResponse> => {
+  const response = await api.GET(`${EVENTS_URL}/${eventId}/results`);
+  return response;
+};
+export const uploadResults = (eventId: string, jsonData: object) => {
+  return api.POST(`${EVENTS_URL}/${eventId}/results`, jsonData, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+export const deleteResults = (eventId: string) => api.DELETE(`${EVENTS_URL}/${eventId}/results`);
+export const fetchResultsTeamYears = () => api.GET(`${RAITING_URL}/teams`);

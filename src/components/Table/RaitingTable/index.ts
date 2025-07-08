@@ -1,0 +1,1 @@
+export { RaitingTable } from './RaitingTable';

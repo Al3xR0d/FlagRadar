@@ -13,6 +13,10 @@ export function AntdTable<T extends object = any>(props: Props<T>): React.ReactE
 }
 
 const StyledTableWrapper = styled.div`
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+
   .ant-table {
     background-color: #151522;
     border: 1px solid #25253a;
@@ -35,6 +39,10 @@ const StyledTableWrapper = styled.div`
 
     .ant-table-tbody > tr:not(.ant-table-expanded-row):hover > td {
       background-color: #1e1e2d;
+    }
+
+    .ant-table-tbody > tr:has(.ant-tooltip-open) > td {
+      background-color: #151522;
     }
 
     .ant-table-title {

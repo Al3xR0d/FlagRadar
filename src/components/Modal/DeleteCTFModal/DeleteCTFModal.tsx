@@ -11,7 +11,7 @@ interface Props {
 export const DeleteCTFModal: React.FC<Props> = ({ open, onClose, onClick }) => {
   return (
     <AntdModal
-      titleText="Удалить команду"
+      titleText="Удалить CTF"
       iconClassName="fas fa-trash-alt"
       open={open}
       onCancel={onClose}

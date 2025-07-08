@@ -6,6 +6,12 @@ import { AntdButton } from '@/shared/ui/Button';
 import { useJoinCTF, useCurrentUser } from '@/hooks/useQueries';
 import notification from 'antd/es/notification';
 
+interface ApiResponse {
+  result: 'Ok' | 'Err';
+  msg: string;
+  data: unknown | null;
+}
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -23,14 +29,18 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
     mutation.mutate(
       { eventId, token },
       {
-        onSuccess: async () => {
-          await currentUserQuery.refetch();
-          notification.success({ message: 'Вы присоеденились к CTF' });
-          onClose();
-          setToken('');
+        onSuccess: async (response: ApiResponse) => {
+          if (response.result === 'Ok') {
+            await currentUserQuery.refetch();
+            notification.success({ message: 'Вы присоединились к CTF' });
+            onClose();
+            setToken('');
+          } else {
+            notification.error({ message: response.msg || 'Ошибка присоединения к CTF' });
+          }
         },
         onError: () => {
-          notification.error({ message: 'Ошибка присоединения к CTF' });
+          notification.error({ message: 'Сетевая ошибка при присоединении к CTF' });
         },
       },
     );
@@ -50,7 +60,7 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
           <AntdButton
             key="confirm"
             onClick={handleOk}
-            text="Присоедениться"
+            text="Присоединиться"
             disabled={!token || !eventId}
           />
         </>

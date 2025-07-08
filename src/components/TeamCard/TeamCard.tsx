@@ -49,7 +49,9 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           {(isCaptain && members.length === 1) || !isCaptain ? (
             <AntdCancelButton
               onClick={() => setCreateVisibleCancelButton(true)}
-              icon={<i className="fas fa-door-open" />}
+              icon={
+                <Icon className="fas fa-door-open" color="#ffffff" marginRight="8" fontSize="15" />
+              }
               text="Покинуть команду"
             />
           ) : (
@@ -58,7 +60,7 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           {isCaptain ? (
             <AntdButton
               onClick={() => setCreateVisibleButton(true)}
-              icon={<i className="fas fa-edit" />}
+              icon={<Icon className="fas fa-edit" color="#0e0e14" marginRight="8" fontSize="15" />}
               text="Редактировать"
             />
           ) : (

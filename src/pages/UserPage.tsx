@@ -12,6 +12,7 @@ import { Footer } from '@/components/Layout/Footer';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { PageContainer } from '@/shared/ui/PageContainer';
 import { StyledCard } from '@/shared/ui/StyledCard';
+import { Icon } from '@/shared/ui/Icon';
 
 const StyledDescriptions = styled(Descriptions)`
   background: #1a1a24;
@@ -82,11 +83,15 @@ const UserPage: React.FC = () => {
                 </Flex>
               </Descriptions.Item>
             </StyledDescriptions>
-            <AntdButton
-              icon={<i className="fas fa-edit" />}
-              text="Редактировать"
-              onClick={() => setCreateVisible(true)}
-            />
+            <Flex justify="start">
+              <AntdButton
+                icon={
+                  <Icon className="fas fa-edit" color="#0e0e14" marginRight="8" fontSize="15" />
+                }
+                text="Редактировать"
+                onClick={() => setCreateVisible(true)}
+              />
+            </Flex>
           </Flex>
         </StyledCard>
         {isCreateVisible && (

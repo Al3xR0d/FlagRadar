@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import styled from 'styled-components';
-import Select from 'antd/es/select';
+import Select, { SelectProps } from 'antd/es/select';
 
-interface Props {
+interface Props extends SelectProps {
   options: Options[];
 }
 

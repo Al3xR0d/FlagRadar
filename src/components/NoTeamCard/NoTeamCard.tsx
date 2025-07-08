@@ -21,15 +21,15 @@ export const NoTeamCard: FC<Props> = ({ onCreateTeam, onJoinTeam }) => {
       <Wrapper>
         <p>У вас еще нет команды</p>
       </Wrapper>
-      <Flex vertical={true} gap={'middle'}>
+      <Flex vertical={true} gap={'middle'} align="flex-start">
         <AntdButton
           onClick={onCreateTeam}
-          icon={<Icon className="fa-solid fa-plus" color="#0e0e14" fontSize="15" />}
+          icon={<Icon className="fa-solid fa-plus" color="#0e0e14" fontSize="15" marginRight="8" />}
           text={'Создать команду'}
         />
         <AntdButton
           onClick={onJoinTeam}
-          icon={<Icon className="fas fa-users" color="#0e0e14" fontSize="15" />}
+          icon={<Icon className="fas fa-users" color="#0e0e14" fontSize="15" marginRight="8" />}
           text={'Присоединиться'}
         />
       </Flex>

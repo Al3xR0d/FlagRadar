@@ -15,7 +15,7 @@ const StyledSider = styled(Sider)`
   border-right: 1px solid #25253a;
 
   & .ant-layout-sider-trigger {
-    background: #151522;
+    background: #121218;
     border-top: 1px solid #25253a;
     border-right: 1px solid #25253a;
   }
@@ -56,7 +56,7 @@ const StyledMenu = styled(Menu)`
   font-size: 15px;
 
   & .ant-menu-item {
-    color: #e0e0ff;
+    color: #8a8aa8;
   }
 
   & .ant-menu-item:hover,

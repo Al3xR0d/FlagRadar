@@ -23,6 +23,9 @@ import {
   editRules,
   acceptUser,
   fetchCurrentUserFull,
+  fetchResults,
+  uploadResults,
+  deleteResults,
 } from '../services/Api';
 import {
   User,
@@ -233,6 +236,52 @@ export const useAcceptUser = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries('currentUser');
+    },
+  });
+};
+
+export const useUploadResults = () => {
+  const qc = useQueryClient();
+  return useMutation(
+    ({ eventId, jsonData }: { eventId: string; jsonData: object }) =>
+      uploadResults(eventId, jsonData),
+    {
+      onSuccess: () => qc.invalidateQueries('results'),
+    },
+  );
+};
+
+export const usefetchResults = ({ eventId }: { eventId: string }) => {
+  return useQuery({
+    queryKey: ['results', eventId],
+    queryFn: () => fetchResults(eventId),
+    enabled: !!eventId,
+    ...defaultQueryOptions,
+  });
+};
+
+export const useDeleteResults = () => {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (eventId: string) => deleteResults(eventId),
+    onSuccess: (_, eventId) => {
+      qc.invalidateQueries({ queryKey: ['results', eventId] });
+      notification.success({
+        message: 'Результаты успешно удалены',
+        description: 'Результаты удалены',
+        placement: 'topRight',
+      });
+    },
+    onError: (error: any) => {
+      console.error('Ошибка при удалении результатов:', error);
+      notification.error({
+        message: `Ошибка при удалении результатов: ${
+          error.response?.data?.message || 'Неизвестная ошибка'
+        }`,
+        description: 'Ошибка при удалении результатов',
+        placement: 'topRight',
+      });
     },
   });
 };

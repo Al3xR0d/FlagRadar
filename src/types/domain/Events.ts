@@ -8,6 +8,7 @@ export const enum EventsStatus {
   PENDING = 'pending',
   FINISHED = 'finished',
   CANCELLED = 'cancelled',
+  REGISTRATION = 'registration',
 }
 
 export interface Events {

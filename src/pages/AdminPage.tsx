@@ -105,15 +105,15 @@ const AdminPage: React.FC = () => {
                       fontSize="15"
                     />
                   }
-                  text={'Создать CTF'}
+                  text={' Создать CTF'}
                 />
                 <AntdButton
                   disabled={isCTFLoading}
                   loading={isCTFLoading}
                   icon={
-                    <Icon className="fas fa-edit" color="#0e0e14" marginRight="0" fontSize="15" />
+                    <Icon className="fas fa-edit" color="#0e0e14" marginRight="0" fontSize="13" />
                   }
-                  text={'Правила платформы'}
+                  text={' Правила платформы'}
                   onClick={() => setShowRules(true)}
                 />
               </Flex>
@@ -127,6 +127,7 @@ const AdminPage: React.FC = () => {
             onEdit={handleEdit}
             onDelete={handleDelete}
             onChange={onCtfTableChange}
+            showResultsColumn={true}
           />
         </div>
         <Divider />

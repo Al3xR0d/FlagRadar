@@ -15,21 +15,27 @@ const statusStyles = {
     font-weight: 700;
   `,
   pending: css`
-    background-color: #1a1a00;
-    color: #ffcc00;
-    border: 1px solid #ffcc00;
+    background-color: #001f0f;
+    color: #00ff9d;
+    border: 1px solid #00ff9d;
     font-weight: 700;
   `,
   finished: css`
-    background-color: #2f2f2f;
-    color: #999999;
-    border: 1px solid #666666;
+    background-color: #001f0f;
+    color: #00ff9d;
+    border: 1px solid #00ff9d;
     font-weight: 400;
   `,
   cancelled: css`
-    background-color: #3a0000;
-    color: #ff4c4c;
-    border: 1px solid #ff4c4c;
+    background-color: #001f0f;
+    color: #00ff9d;
+    border: 1px solid #00ff9d;
+    font-weight: 700;
+  `,
+  registration: css`
+    background-color: #001f0f;
+    color: #00ff9d;
+    border: 1px solid #00ff9d;
     font-weight: 700;
   `,
 };
@@ -51,11 +57,13 @@ const Tag = styled.span<{ $status: EventsStatus }>`
           case 'active':
             return '#00ff9d';
           case 'pending':
-            return '#ffcc00';
+            return '#00ff9d';
           case 'finished':
-            return '#999999';
+            return '#00ff9d';
           case 'cancelled':
-            return '#ff4c4c';
+            return '#00ff9d';
+          case 'registration':
+            return '#00ff9d';
           default:
             return 'transparent';
         }
@@ -65,8 +73,9 @@ const Tag = styled.span<{ $status: EventsStatus }>`
 
 const STATUS_TEXT_MAP: Record<EventsStatus, string> = {
   active: 'Активно',
-  pending: 'Ожидает',
+  pending: 'Подготовка',
   finished: 'Завершен',
+  registration: 'Регистрация',
   cancelled: 'Отменён',
 };
 

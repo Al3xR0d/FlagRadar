@@ -4,6 +4,7 @@ import { User } from '@/types';
 import { AntdTable } from '@/shared/ui/Table';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { Icon } from '@/shared/ui/Icon';
+import { ColumnsType } from 'antd/es/table';
 
 interface Props {
   isLoading: boolean;
@@ -11,14 +12,14 @@ interface Props {
   onChange?: (pagination: any, filters: any, sorter: any, extra: any) => void;
 }
 
-const columns = [
-  { title: 'UUID', dataIndex: 'uuid', key: 'uuid' },
-  { title: 'ЛОГИН', dataIndex: 'nickname', key: 'nickname' },
-  { title: 'АТРИБУТ', dataIndex: 'properties', key: 'properties' },
-  { title: 'BB SCORE', dataIndex: 'score_bb', key: 'score_bb' },
-  { title: 'CTF SCORE', dataIndex: 'score_ctf', key: 'score_ctf' },
-  { title: 'КОМАНДА', dataIndex: 'team_id', key: 'team_id' },
-  { title: 'SBERPDI', dataIndex: 'sber_pdi', key: 'sber_pdi' },
+const columns: ColumnsType<User> = [
+  { title: 'UUID', dataIndex: 'uuid', key: 'uuid', align: 'center' },
+  { title: 'ЛОГИН', dataIndex: 'nickname', key: 'nickname', align: 'center' },
+  { title: 'АТРИБУТ', dataIndex: 'properties', key: 'properties', align: 'center' },
+  { title: 'BB SCORE', dataIndex: 'score_bb', key: 'score_bb', align: 'center' },
+  { title: 'CTF SCORE', dataIndex: 'score_ctf', key: 'score_ctf', align: 'center' },
+  { title: 'КОМАНДА', dataIndex: 'team_id', key: 'team_id', align: 'center' },
+  { title: 'SBERPDI', dataIndex: 'sber_pdi', key: 'sber_pdi', align: 'center' },
 ];
 
 export const UsersTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
