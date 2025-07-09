@@ -27,6 +27,7 @@ import {
   uploadResults,
   deleteResults,
   fetchResultsTeamYears,
+  fetchAI,
 } from '../services/Api';
 import {
   User,
@@ -40,6 +41,7 @@ import {
   Events,
   EditedRules,
   AccessMeRequest,
+  Role,
 } from '../types';
 import { useUserStore } from '@/store/userStore';
 import notification from 'antd/es/notification';
@@ -247,7 +249,10 @@ export const useUploadResults = () => {
     ({ eventId, jsonData }: { eventId: string; jsonData: object }) =>
       uploadResults(eventId, jsonData),
     {
-      onSuccess: () => qc.invalidateQueries('results'),
+      onSuccess: () => {
+        qc.invalidateQueries('results');
+        qc.invalidateQueries('teamsRaiting');
+      },
     },
   );
 };
@@ -268,6 +273,7 @@ export const useDeleteResults = () => {
     mutationFn: (eventId: string) => deleteResults(eventId),
     onSuccess: (_, eventId) => {
       qc.invalidateQueries({ queryKey: ['results', eventId] });
+      qc.invalidateQueries('teamsRaiting');
       notification.success({
         message: 'Результаты успешно удалены',
         description: 'Результаты удалены',
@@ -291,5 +297,13 @@ export const useTeamsRaiting = ({ year, page }: { year: number; page: number }) 
   return useQuery({
     queryKey: ['teamsRaiting', year, page],
     queryFn: () => fetchResultsTeamYears(year, page),
+    cacheTime: 0,
+    staleTime: 0,
+  });
+};
+
+export const useFetchAI = () => {
+  return useMutation({
+    mutationFn: ({ role, question }: { role: Role; question: string }) => fetchAI(role, question),
   });
 };

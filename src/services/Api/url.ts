@@ -7,6 +7,7 @@ export const TEAM_URL = `${API_BASE_URL}/teams`;
 export const USER_URL = `${API_BASE_URL}/users`;
 export const RULES_URL = `${API_BASE_URL}/rules`;
 export const RAITING_URL = `${API_BASE_URL}/rating`;
+export const AI_URL = `${API_BASE_URL}/question`
 
 export const TEAM_PARTICIPANTS_URL = `${TEAM_URL}/participants`;
 export const ADMIN_TEAMS_URL = `${API_BASE_URL}/admin/teams`;

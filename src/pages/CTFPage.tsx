@@ -7,7 +7,6 @@ import { PageContainer } from '@/shared/ui/PageContainer';
 
 const CTFPage: React.FC = () => {
   const { data, isLoading } = useCtfQuery();
-
   const ctfRef = useRef<HTMLDivElement>(null);
 
   const scrollToRef = (ref: typeof ctfRef) => {

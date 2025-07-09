@@ -15,6 +15,7 @@ import { AntdModal } from '@/shared/ui/Modal';
 import notification from 'antd/es/notification';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { CheckboxWrapper } from '@/shared/ui/CheckboxWrapper';
+import { formatDateToAntdInput } from '@/lib/date';
 
 const ctfOptions = [
   {
@@ -274,22 +275,18 @@ export const EditCTFModal: FC<Props> = ({ open, onClose, record }) => {
   const { mutate, isLoading } = useEditCTF();
   const queryClient = useQueryClient();
 
-  const formatDateForInput = (isoDate: string) => {
-    if (!isoDate) return '';
-    const date = new Date(isoDate);
-    return date.toISOString().slice(0, 16);
-  };
-
   const initialValues = {
     ...record,
-    date: formatDateForInput(record.date),
-    date_end: formatDateForInput(record.date_end),
-    reg_start: formatDateForInput(record.reg_start),
-    reg_end: formatDateForInput(record.reg_end),
+    date: formatDateToAntdInput(record.date),
+    date_end: formatDateToAntdInput(record.date_end),
+    reg_start: formatDateToAntdInput(record.reg_start),
+    reg_end: formatDateToAntdInput(record.reg_end),
     event_format: record.event_format,
     part_format: record.part_format,
     is_private: record.is_private || false,
   };
+
+  console.log(initialValues);
 
   const handleSubmit = async () => {
     try {
@@ -302,10 +299,10 @@ export const EditCTFModal: FC<Props> = ({ open, onClose, record }) => {
       }
       const formatedValues = {
         ...values,
-        date: `${values.date}:00Z`,
-        date_end: `${values.date_end}:00Z`,
-        reg_start: `${values.reg_start}:00Z`,
-        reg_end: `${values.reg_end}:00Z`,
+        date: new Date(values.date).toISOString(),
+        date_end: new Date(values.date_end).toISOString(),
+        reg_start: new Date(values.reg_start).toISOString(),
+        reg_end: new Date(values.reg_end).toISOString(),
         member_limit: Number(values.member_limit),
         team_limit: Number(values.team_limit),
       };

@@ -11,6 +11,8 @@ import {
   MeListResponse,
   ResultsListResponse,
   ResultsTeamsYearsResponse,
+  Answer,
+  Role,
 } from '@/types';
 import {
   EVENTS_URL,
@@ -20,6 +22,7 @@ import {
   TEAM_URL,
   RULES_URL,
   RAITING_URL,
+  AI_URL,
 } from './url';
 import { api } from './api';
 
@@ -94,3 +97,5 @@ export const fetchResultsTeamYears = async (
   year: number,
   page: number,
 ): Promise<ResultsTeamsYearsResponse> => api.GET(`${RAITING_URL}/teams?year=${year}&page=${page}`);
+export const fetchAI = async (role: Role, question: string): Promise<Answer> =>
+  api.POST(`${AI_URL}?role=${role}`, { question });

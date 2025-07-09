@@ -8,4 +8,9 @@ interface Props {
 
 export const PageContainer = styled(Flex)<Props>`
   min-height: ${({ minHeight }) => minHeight ?? '100vh'};
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 `;

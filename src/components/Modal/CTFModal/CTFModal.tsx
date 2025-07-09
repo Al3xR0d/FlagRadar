@@ -7,8 +7,8 @@ import Row from 'antd/es/row';
 import { AntdLink } from '@/shared/ui/Link';
 import { useEventById } from '@/hooks/useQueries';
 import { useUserStore } from '@/store/userStore';
-import { formatTime } from '@/helpers/helpers';
-import { editNameFormat, nameType } from '@/helpers/helpers';
+import { editNameFormat, NameType } from '@/lib/name';
+import { formatDateToDefaultFormatMsk } from '@/lib/date';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { useUsersQuery } from '@/hooks/useQueries';
 import { AntdTable } from '@/shared/ui/Table';
@@ -106,17 +106,23 @@ export const CTFModal: React.FC<Props> = ({
   const cardData = [
     { title: 'НАЗВАНИЕ', content: name },
     { title: 'ОПИСАНИЕ', content: description },
-    ...(date ? [{ title: 'ДАТА НАЧАЛА', content: formatTime(date) }] : []),
-    ...(dateEnd ? [{ title: 'ДАТА ОКОНЧАНИЯ', content: formatTime(dateEnd) }] : []),
+    ...(date ? [{ title: 'ДАТА НАЧАЛА', content: formatDateToDefaultFormatMsk(date) }] : []),
+    ...(dateEnd
+      ? [{ title: 'ДАТА ОКОНЧАНИЯ', content: formatDateToDefaultFormatMsk(dateEnd) }]
+      : []),
     { title: 'МЕСТО ПРОВЕДЕНИЯ', content: place },
     { title: 'ФОРМАТ', content: format },
     {
       title: 'ФОРМАТ CTF',
-      content: editNameFormat(eventFormat as nameType),
+      content: editNameFormat(eventFormat as NameType),
     },
     { title: 'ПРАВИЛА', content: rules, isLink: true },
-    ...(regStart ? [{ title: 'НАЧАЛО РЕГИСТРАЦИИ', content: formatTime(regStart) }] : []),
-    ...(regEnd ? [{ title: 'ОКОНЧАНИЕ РЕГИСТРАЦИИ', content: formatTime(regEnd) }] : []),
+    ...(regStart
+      ? [{ title: 'НАЧАЛО РЕГИСТРАЦИИ', content: formatDateToDefaultFormatMsk(regStart) }]
+      : []),
+    ...(regEnd
+      ? [{ title: 'ОКОНЧАНИЕ РЕГИСТРАЦИИ', content: formatDateToDefaultFormatMsk(regEnd) }]
+      : []),
     ...(isAdmin && (data?.tokens?.length || data?.tokens?.length === 0)
       ? [
           {

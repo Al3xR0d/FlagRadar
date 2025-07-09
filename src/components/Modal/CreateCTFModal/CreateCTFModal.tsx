@@ -282,10 +282,10 @@ export const CreateCTFModal: React.FC<Props> = ({ open, onClose }) => {
       }
       const formatedValues = {
         ...values,
-        date: `${values.date}:00Z`,
-        date_end: `${values.date_end}:00Z`,
-        reg_start: `${values.reg_start}:00Z`,
-        reg_end: `${values.reg_end}:00Z`,
+        date: new Date(values.date).toISOString(),
+        date_end: new Date(values.date_end).toISOString(),
+        reg_start: new Date(values.reg_start).toISOString(),
+        reg_end: new Date(values.reg_end).toISOString(),
         member_limit: Number(values.member_limit),
         team_limit: Number(values.team_limit),
       };

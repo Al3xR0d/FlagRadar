@@ -32,7 +32,6 @@ interface Props {
 }
 
 export const RaitingTable: FC<Props> = ({ onChange }) => {
-  console.count('RaitingTable render');
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
   const [teamPage, setTeamPage] = useState(1);
   const [userPage, setUserPage] = useState(1);
@@ -180,7 +179,12 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
             dataSource={teamTableData}
             columns={teamsColumns}
             rowKey="place"
-            title={() => <Icon className="fas fa-ranking-star" />}
+            title={() => (
+              <>
+                <Icon className="fas fa-line-chart" marginRight="8" />
+                Команды
+              </>
+            )}
             pagination={{
               current: teamPage,
               pageSize,
@@ -208,7 +212,12 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
             dataSource={userTableData}
             columns={usersColumns}
             rowKey="name"
-            title={() => <Icon className="fas fa-ranking-star" />}
+            title={() => (
+              <>
+                <Icon className="fas fa-line-chart" marginRight="8" />
+                Пользователи
+              </>
+            )}
             pagination={{
               current: userPage,
               pageSize,

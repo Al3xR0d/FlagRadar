@@ -11,11 +11,11 @@ import { AntdButton } from '@/shared/ui/Button';
 import { AntdCancelButton } from '@/shared/ui/CancelButton';
 import { Tags } from '@/shared/ui/Tags';
 import { useUserStore } from '@/store/userStore';
-import { formatTime } from '@/helpers/helpers';
+import { formatDateToDefaultFormatMsk } from '@/lib/date';
 import { JoinCTFModal } from '@/components/Modal/JoinCTFModal';
 import { LeaveCTFModal } from '@/components/Modal/LeaveCTFModal';
 import { useUploadResults, usefetchResults } from '@/hooks/useQueries';
-import { editNameFormat, nameType } from '@/helpers/helpers';
+import { editNameFormat, NameType } from '@/lib/name';
 import Flex from 'antd/es/flex';
 import { Icon } from '@/shared/ui/Icon';
 import message from 'antd/es/message';
@@ -174,14 +174,14 @@ export const CTFTable: FC<Props> = memo(
           dataIndex: 'date',
           key: 'date',
           align: 'center',
-          render: (data: string) => formatTime(data),
+          render: (date: string) => formatDateToDefaultFormatMsk(date),
         },
         {
           title: 'ФОРМАТ',
           dataIndex: 'event_format',
           key: 'eventFormat',
           align: 'center',
-          render: (format: string) => editNameFormat(format as nameType),
+          render: (format: string) => editNameFormat(format as NameType),
         },
         {
           title: 'СТАТУС',
