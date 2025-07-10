@@ -1,54 +1,137 @@
-# React + TypeScript + Vite
+# FlagRadar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Зависимости
 
-Currently, two official plugins are available:
+Проект построен с использованием следующих ключевых технологий и библиотек:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+React — библиотека для создания интерфейсов.
+React Router — для маршрутизации в приложении.
+Ant Design — набор UI-компонентов.
+React Query — управление состоянием данных и запросами к API.
+Axios — выполнение HTTP-запросов.
+Styled Components — стилизация компонентов.
+Zustand — управление глобальным состоянием.
+FontAwesome — иконки.
 
-## Expanding the ESLint configuration
+Полный список зависимостей указан в файле package.json.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Запуск проекта
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Режим разработки:
+npm run dev
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Приложение запустится на http://localhost:5174.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Сборка для продакшена:
+npm run build
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+Собранные файлы будут находиться в директории dist.
+
+# Структура проекта
+
+Проект организован по следующей структуре:
+
+/src/components — UI-компоненты (Layout, Header, Footer, Sidebar, Modal, Table).
+/src/pages — страницы приложения (CTFPage, TeamPage, AdminPage, UserPage, RatingPage, AIPage).
+/src/hooks — кастомные хуки для работы с API (useQueries).
+/src/services — сервисы для взаимодействия с API (Api).
+/src/store — управление состоянием с помощью Zustand (userStore).
+/src/types — TypeScript типы для данных.
+/src/shared/ui — переиспользуемые UI-компоненты (Button, Input, Modal, etc.).
+/src/lib — утилиты (date, name).
+
+# Компоненты
+
+Layout
+
+Layout.tsx — основной компонент макета, который включает Sidebar и Content. Также отображает модальное окно AcceptUserModal, если пользователь не принят.
+
+Header
+
+Header.tsx — компонент заголовка, отображающий название страницы и опциональную кнопку.
+
+Footer
+
+Footer.tsx — компонент подвала, содержащий ссылку на политику обработки персональных данных и модальное окно PolicyModal.
+
+Sidebar
+
+Sidebar.tsx — боковая панель с навигацией по страницам. Меню динамически формируется в зависимости от роли пользователя.
+
+Модальные окна
+
+AcceptUserModal.tsx — модальное окно для принятия правил платформы и ввода никнейма.
+CreateCTFModal.tsx — модальное окно для создания нового CTF-события.
+CreateTeamModal.tsx — модальное окно для создания новой команды.
+CTFModal.tsx - модальное окно с информацией о CTF-событии.
+DeleteCTFModal.tsx - модальное окно для возможности удаления CTF-события.
+DeleteResultsModal.tsx — модальное окно для удаления результатов CTF.
+EditCTFModal.tsx — модальное окно для редактирования CTF-события.
+EditRulesModal.tsx - модальное окно для возможности изменения правил платформы.
+EditTeamModal.tsx - модальное окно для возможности изменения наименования команды.
+EditUserModal.tsx — модальное окно для редактирования профиля пользователя.
+JoinCTFModal.tsx - модальное окно для возможности присоединения к CTF-событию по токену.
+JoinTeamModal.tsx — модальное окно для присоединения к команде по токену.
+LeaveCTFModal.tsx - модальное окно для возможности покинуть CTF-событие.
+LeaveTeamModal.tsx — модальное окно для выхода из команды.
+PolicyModal.tsx — модальное окно с правилами платформы.
+ResultsModal.tsx — модальное окно для отображения результатов CTF.
+TeamModal.tsx — модальное окно с информацией о команде.
+
+Таблицы
+
+CTFTable.tsx — таблица для отображения списка CTF-событий с возможностью фильтрации и сортировки.
+TeamsTable.tsx — таблица для отображения списка команд.
+UsersTable.tsx — таблица для отображения списка пользователей.
+RaitingTable.tsx — таблица для отображения рейтинга команд и пользователей.
+
+Хуки
+
+useQueries.ts — набор хуков для взаимодействия с API:
+useCurrentUser — получение данных текущего пользователя.
+useTeamByCurrentUser - получение данных команды по конкретному пользователю.
+useCtfQuery — получение списка CTF-событий.
+useTeamsQuery — получение списка команд.
+useUsersQuery — получение списка пользователей.
+useCreateCTF — создание нового CTF-события.
+useEditCTF — редактирование CTF-события.
+useDeleteCTF — удаление CTF-события.
+useJoinCTF — присоединение к CTF-событию.
+useLeaveCTF — выход из CTF-события.
+useCreateTeam — создание команды.
+useJoinTeam — присоединение к команде.
+useLeaveTeam — выход из команды.
+useFetchRules - получение актуальных правил.
+useAcceptUser - получение информации о принятии правил пользователем.
+useUploadResults — загрузка результатов CTF.
+useFetchResults — получение результатов CTF.
+useDeleteResults — удаление результатов CTF.
+useTeamsRaiting — получение рейтинга команд.
+useFetchAI — запрос к AI-помощнику.
+
+Сервисы
+
+Api.ts — класс для взаимодействия с API, инкапсулирующий Axios с перехватчиками для авторизации и обработки ошибок.
+
+Утилиты
+
+date.ts — утилиты для форматирования дат.
+name.ts — утилиты для преобразования названий форматов CTF.
+
+# API
+
+Проект взаимодействует с бэкендом через REST API. Основные эндпоинты:
+
+/api/v2/me — информация о текущем пользователе.
+/api/v2/events — управление CTF-событиями.
+/api/v2/teams — управление командами.
+/api/v2/users — управление пользователями.
+/api/v2/rules — получение и редактирование правил платформы.
+/api/v2/rating — данные рейтинга.
+/api/v2/question — запросы к AI-помощнику.
+
+# Состояние
+
+Глобальное состояние управляется с помощью Zustand:
+
+userStore.ts — хранит данные текущего пользователя, ID команды и правила платформы.
