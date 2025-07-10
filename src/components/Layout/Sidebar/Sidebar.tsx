@@ -72,7 +72,7 @@ const StyledMenu = styled(Menu)`
 `;
 
 export const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 

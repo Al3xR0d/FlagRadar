@@ -4,6 +4,9 @@ import { AntdCloseButton } from '@/shared/ui/CloseButton';
 import { ResultsListResponse } from '@/types/domain/Results';
 import { AntdLink } from '@/shared/ui/Link';
 import { CustomSpin } from '@/shared/ui/Spin';
+import Empty from 'antd/es/empty';
+import styled from 'styled-components';
+import { FrownOutlined, LinkOutlined } from '@ant-design/icons';
 
 interface Props {
   open: boolean;
@@ -12,6 +15,35 @@ interface Props {
   isLoading: boolean;
   isError: boolean;
 }
+
+export const StyledEmpty = styled(Empty)`
+  .ant-empty-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+
+    svg {
+      width: 100px;
+      height: 90px;
+      font-size: 100px;
+    }
+  }
+
+  .ant-empty-description {
+    color: #e0e0ff;
+    text-align: center;
+  }
+`;
+
+const editLink = (link: string) => {
+  if (!link.startsWith('http')) {
+    return `https://${link}`;
+  }
+  return link;
+};
 
 export const ResultsModal: FC<Props> = ({ open, onClose, results, isLoading, isError }) => {
   return (
@@ -33,18 +65,24 @@ export const ResultsModal: FC<Props> = ({ open, onClose, results, isLoading, isE
       ) : isError ? (
         <p>Не удалось загрузить результаты</p>
       ) : !results || !results.data ? (
-        <p>Результаты не загружены</p>
+        <StyledEmpty
+          image={<FrownOutlined />}
+          description="Для этого CTF результаты ещё не загружены"
+        />
       ) : results.data.links.length === 0 ||
         (results.data.links.length === 1 && results.data.links[0] === '') ? (
-        <p>Ссылки на разбор отсутствуют</p>
+        <StyledEmpty
+          image={<LinkOutlined />}
+          description="В загруженном файле ссылки на разбор отсутствуют"
+        />
       ) : (
         <>
           <p>Ссылки на разбор</p>
           <ul>
             {results.data.links.map((link, index) => (
               <li key={index}>
-                <AntdLink href={link} target="_blank">
-                  {link}
+                <AntdLink href={editLink(link)} target="_blank">
+                  {editLink(link)}
                 </AntdLink>
               </li>
             ))}

@@ -34,11 +34,11 @@ interface Props {
 export const CTFTable: FC<Props> = memo(
   ({ isLoading, data, onEdit, onDelete, onChange, showResultsColumn }) => {
     const [selectedEvent, setSelectedEvent] = useState<Events | null>(null);
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-    const [isModalJoinOpen, setIsModalJoinOpen] = useState(false);
-    const [isModalLeaveOpen, setIsModalLeaveOpen] = useState(false);
-    const [isModalResultsOpen, setIsModalResultsOpen] = useState(false);
-    const [isModalDeleteResultsOpen, setIsModalDeleteResultOpen] = useState(false);
+    const [isModalEditOpen, setIsModalEditOpen] = useState<boolean>(false);
+    const [isModalJoinOpen, setIsModalJoinOpen] = useState<boolean>(false);
+    const [isModalLeaveOpen, setIsModalLeaveOpen] = useState<boolean>(false);
+    const [isModalResultsOpen, setIsModalResultsOpen] = useState<boolean>(false);
+    const [isModalDeleteResultsOpen, setIsModalDeleteResultOpen] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { mutate: fetchResults } = useUploadResults();
@@ -268,6 +268,7 @@ export const CTFTable: FC<Props> = memo(
               render: (_, record: Events) => {
                 const status = getEventStatus(record, new Date()) as EventsStatus;
                 const isResultsDisabled = status !== EventsStatus.FINISHED;
+
                 return (
                   <Flex gap="small">
                     <AntdButton

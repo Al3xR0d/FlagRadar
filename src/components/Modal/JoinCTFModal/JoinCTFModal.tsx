@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState<string>('');
   const mutation = useJoinCTF();
   const currentUserQuery = useCurrentUser();
 

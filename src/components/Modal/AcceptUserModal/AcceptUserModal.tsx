@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AntdModal } from '@/shared/ui/Modal';
 import { AntdInput } from '@/shared/ui/Input';
 import Checkbox from 'antd/es/checkbox';
 import message from 'antd/es/message';
 import { useUserStore } from '@/store/userStore';
-import { useAcceptUser } from '@/hooks/useQueries';
+import { useAcceptUser, useCtfQuery, useTeamsQuery, useUsersQuery } from '@/hooks/useQueries';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { AntdButton } from '@/shared/ui/Button';
 import Form from 'antd/es/form';
 import Flex from 'antd/es/flex';
 import Link from 'antd/es/typography/Link';
 import { TextWrapper } from '@/shared/ui/TextWrapper';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  isExistingUser?: boolean;
+  existingNickname?: string;
+  existingProperties?: string;
 }
 
 const StyledCheckbox = styled(Checkbox)`
@@ -27,12 +32,23 @@ const StyledFormItem = styled(Form.Item)`
   color: #e0e0ff;
 `;
 
-export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
-  const [nickname, setNickname] = useState('');
-  const [accepted, setAccepted] = useState(false);
+export const AcceptUserModal: React.FC<Props> = ({
+  open,
+  onClose,
+  isExistingUser = false,
+  existingNickname = '',
+}) => {
+  const [nickname, setNickname] = useState<string>('');
+  const [accepted, setAccepted] = useState<boolean>(false);
 
   const rulesText = useUserStore((store) => store.rules);
   const mutation = useAcceptUser();
+  const events = useCtfQuery();
+  const teams = useTeamsQuery();
+  const users = useUsersQuery();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const handleSubmit = async () => {
     if (accepted && nickname === '') {
       message.error('Введите никнейм');
@@ -52,9 +68,16 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
     mutation.mutate(
       { nickname },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           message.success('Добро пожаловать!');
           onClose();
+          // await events.refetch();
+          // await teams.refetch();
+          // await users.refetch();
+          queryClient.invalidateQueries(['team']);
+          queryClient.invalidateQueries(['ctfs']);
+          queryClient.invalidateQueries(['adminUsers']);
+          navigate('/user');
         },
         onError: () => {
           message.error('Ошибка при регистрации');
@@ -63,9 +86,15 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
     );
   };
 
+  useEffect(() => {
+    if (isExistingUser) {
+      setNickname(existingNickname);
+    }
+  }, [isExistingUser, existingNickname]);
+
   return (
     <AntdModal
-      titleText="Добро пожаловать!"
+      titleText={isExistingUser ? 'Новые правила' : 'Добро пожаловать!'}
       open={open}
       width={800}
       onCancel={onClose}
@@ -93,9 +122,10 @@ export const AcceptUserModal: React.FC<Props> = ({ open, onClose }) => {
         </StyledFormItem>
         <Form.Item>
           <AntdInput
-            placeholder="Введите никнейм"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => !isExistingUser && setNickname(e.target.value)}
+            disabled={isExistingUser}
+            placeholder={isExistingUser ? 'Ваш никнейм' : 'Введите никнейм'}
           />
         </Form.Item>
       </Form>

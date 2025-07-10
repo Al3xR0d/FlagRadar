@@ -13,6 +13,7 @@ interface Props extends Omit<InputProps, 'type'> {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 interface TextAreaPropsExtended extends TextAreaProps {

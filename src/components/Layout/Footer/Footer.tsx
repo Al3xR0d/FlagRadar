@@ -11,7 +11,7 @@ const StyledFooter = styled.footer`
 `;
 
 export const Footer: FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
     <StyledFooter>
@@ -20,7 +20,7 @@ export const Footer: FC = () => {
           Политика обработки персональных данных в ПАО Сбербанк
         </Link>
       </Flex>
-      <PolicyModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && <PolicyModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />}
     </StyledFooter>
   );
 };

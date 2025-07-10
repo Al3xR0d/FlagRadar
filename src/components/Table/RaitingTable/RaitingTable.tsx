@@ -33,8 +33,8 @@ interface Props {
 
 export const RaitingTable: FC<Props> = ({ onChange }) => {
   const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
-  const [teamPage, setTeamPage] = useState(1);
-  const [userPage, setUserPage] = useState(1);
+  const [teamPage, setTeamPage] = useState<number>(1);
+  const [userPage, setUserPage] = useState<number>(1);
 
   const teamTableRef = useRef<HTMLDivElement>(null);
   const userTableRef = useRef<HTMLDivElement>(null);
@@ -107,31 +107,55 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
     },
   ];
 
+  function assignPlaces<T extends { score: number }>(data: T[]): (T & { place: number })[] {
+    const sorted = [...data].sort((a, b) => b.score - a.score);
+
+    let currentPlace: number = 1;
+    let lastScore: number | null = null;
+    let skip: number = 0;
+
+    return sorted.map((item, index) => {
+      if (item.score !== lastScore) {
+        currentPlace = index + 1;
+        lastScore = item.score;
+      } else {
+        skip++;
+      }
+
+      return {
+        ...item,
+        place: currentPlace,
+      };
+    });
+  }
+
   const teamTableData = useMemo(() => {
-    return (
-      teamsData?.data?.map((team, index) => ({
-        place: (teamPage - 1) * pageSize + index + 1,
+    const teams =
+      teamsData?.data?.map((team) => ({
         teamName: team.teamname,
         score: team.ctf_score,
         participation: team.num_ctf,
-      })) || []
-    );
+      })) || [];
+
+    const withPlaces = assignPlaces(teams);
+
+    return withPlaces.slice((teamPage - 1) * pageSize, teamPage * pageSize);
   }, [teamsData, teamPage]);
 
-  const userTableData = useMemo(
-    () =>
-      teamsData?.data
-        ?.flatMap((team) =>
-          team.members.map((member, memberIndex) => ({
-            place: (userPage - 1) * pageSize + memberIndex + 1,
-            name: member.nickname,
-            score: team.ctf_score,
-            participation: team.num_ctf,
-          })),
-        )
-        .slice((userPage - 1) * pageSize, userPage * pageSize) || [],
-    [teamsData, userPage],
-  );
+  const userTableData = useMemo(() => {
+    const users =
+      teamsData?.data?.flatMap((team) =>
+        team.members.map((member) => ({
+          name: member.nickname,
+          score: team.ctf_score,
+          participation: team.num_ctf,
+        })),
+      ) || [];
+
+    const withPlaces = assignPlaces(users);
+
+    return withPlaces.slice((userPage - 1) * pageSize, userPage * pageSize);
+  }, [teamsData, userPage]);
 
   const totalTeams = teamsData?.data?.length || 0;
   const totalUsers = teamsData?.data?.reduce((acc, team) => acc + team.members.length, 0) || 0;

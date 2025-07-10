@@ -45,6 +45,7 @@ import {
 } from '../types';
 import { useUserStore } from '@/store/userStore';
 import notification from 'antd/es/notification';
+import { AxiosError } from 'axios';
 
 export const defaultQueryOptions = {
   retry: false,
@@ -82,7 +83,7 @@ export const useCurrentUserFull = () => {
 export const useTeamByCurrentUser = () => {
   const teamId = useUserStore((state) => state.teamId);
 
-  return useQuery({
+  return useQuery<Teams, AxiosError>({
     queryKey: ['team', teamId],
     queryFn: () => getTeamById(teamId!),
     ...defaultQueryOptions,
@@ -91,7 +92,7 @@ export const useTeamByCurrentUser = () => {
 };
 
 export const useCtfQuery = () =>
-  useQuery<EventsListResponse>(['ctfs'], fetchCTFs, defaultQueryOptions);
+  useQuery<EventsListResponse, AxiosError>(['ctfs'], fetchCTFs, defaultQueryOptions);
 
 export const useTeamParticipantsQuery = () =>
   useQuery('teamParticipants', fetchTeamParticipants, defaultQueryOptions);

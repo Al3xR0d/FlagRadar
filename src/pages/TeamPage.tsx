@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import List from 'antd/es/list';
 import { CreateTeamModal } from '@/components/Modal/CreateTeamModal';
 import { NoTeamCard } from '@/components/NoTeamCard';
@@ -10,61 +10,84 @@ import { useTeamByCurrentUser } from '@/hooks/useQueries';
 import { TeamCard } from '@/components/TeamCard';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { PageContainer } from '@/shared/ui/PageContainer';
+import { AcceptUserModal } from '@/components/Modal/AcceptUserModal';
+import { useUserStore } from '@/store/userStore';
 
 const TeamPage: React.FC = () => {
-  const { data: teamData, isLoading: isLoadingTeam } = useTeamByCurrentUser();
+  const { data: teamData, isLoading: isLoadingTeam, error } = useTeamByCurrentUser();
   const data: User[] = [];
   const isLoading = false;
-  const [isCreateVisible, setCreateVisible] = useState(false);
-  const [isJoinVisible, setJoinVisible] = useState(false);
+  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
+  const [isJoinVisible, setJoinVisible] = useState<boolean>(false);
+  const [isAcceptUserModalVisible, setAcceptedUserModalVisible] = useState<boolean>(false);
+
+  const currentUser = useUserStore((state) => state.currentUser);
+
+  useEffect(() => {
+    if (error && error.status === 451) {
+      setAcceptedUserModalVisible(true);
+    }
+  }, [error]);
+
+  const existingNickname = currentUser?.nickname;
 
   if (isLoadingTeam) return <CustomSpin />;
   return (
-    <PageContainer vertical>
-      {teamData ? (
-        <>
-          <Header title="Моя команда" />
-          <TeamCard
-            name={teamData.name}
-            scoreBB={teamData.score_bb}
-            scoreCTF={teamData.score_ctf}
-            token={teamData.token}
-            members={teamData.members}
-          />
-        </>
-      ) : (
-        <PageContainer vertical>
-          <Header title="Моя команда" />
-
-          {(data?.length || 0) > 0 && isLoading ? (
-            <List<User>
-              loading={isLoading}
-              header={<div>Участники команды</div>}
-              bordered
-              dataSource={data ?? []}
-              renderItem={(item) => <List.Item>{item.login}</List.Item>}
+    <>
+      <PageContainer vertical>
+        {teamData ? (
+          <>
+            <Header title="Моя команда" />
+            <TeamCard
+              name={teamData.name}
+              scoreBB={teamData.score_bb}
+              scoreCTF={teamData.score_ctf}
+              token={teamData.token}
+              members={teamData.members}
             />
-          ) : (
-            <>
-              <NoTeamCard
-                onCreateTeam={() => setCreateVisible(true)}
-                onJoinTeam={() => setJoinVisible(true)}
+          </>
+        ) : (
+          <PageContainer vertical>
+            <Header title="Моя команда" />
+
+            {(data?.length || 0) > 0 && isLoading ? (
+              <List<User>
+                loading={isLoading}
+                header={<div>Участники команды</div>}
+                bordered
+                dataSource={data ?? []}
+                renderItem={(item) => <List.Item>{item.login}</List.Item>}
               />
-              {isCreateVisible && (
-                <CreateTeamModal
-                  visible={isCreateVisible}
-                  onClose={() => setCreateVisible(false)}
+            ) : (
+              <>
+                <NoTeamCard
+                  onCreateTeam={() => setCreateVisible(true)}
+                  onJoinTeam={() => setJoinVisible(true)}
                 />
-              )}
-              {isJoinVisible && (
-                <JoinTeamModal visible={isJoinVisible} onClose={() => setJoinVisible(false)} />
-              )}
-            </>
-          )}
-        </PageContainer>
+                {isCreateVisible && (
+                  <CreateTeamModal
+                    visible={isCreateVisible}
+                    onClose={() => setCreateVisible(false)}
+                  />
+                )}
+                {isJoinVisible && (
+                  <JoinTeamModal visible={isJoinVisible} onClose={() => setJoinVisible(false)} />
+                )}
+              </>
+            )}
+          </PageContainer>
+        )}
+        <Footer />
+      </PageContainer>
+      {isAcceptUserModalVisible && (
+        <AcceptUserModal
+          open={isAcceptUserModalVisible}
+          onClose={() => setAcceptedUserModalVisible(false)}
+          isExistingUser={!!existingNickname}
+          existingNickname={existingNickname}
+        />
       )}
-      <Footer />
-    </PageContainer>
+    </>
   );
 };
 

@@ -286,8 +286,6 @@ export const EditCTFModal: FC<Props> = ({ open, onClose, record }) => {
     is_private: record.is_private || false,
   };
 
-  console.log(initialValues);
-
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const JoinTeamModal: React.FC<Props> = ({ visible, onClose }) => {
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState<string>('');
   const mutation = useJoinTeam();
   const currentUserQuery = useCurrentUser();
 

@@ -9,7 +9,6 @@ import {
   useDeleteCTF,
   useTeamsQuery,
   useUsersQuery,
-  useCurrentUser,
   useFetchRules,
 } from '@/hooks/useQueries';
 import { Header } from '@/components/Layout/Header';
@@ -24,25 +23,29 @@ import message from 'antd/es/message';
 import { DeleteCTFModal } from '@/components/Modal/DeleteCTFModal';
 import { Icon } from '@/shared/ui/Icon';
 import { PageContainer } from '@/shared/ui/PageContainer';
+import { AcceptUserModal } from '@/components/Modal/AcceptUserModal';
+import { useUserStore } from '@/store/userStore';
 
 const Wrapper = styled.span`
   margin-bottom: 10px;
 `;
 
 const AdminPage: React.FC = () => {
-  const { data: ctfData, isLoading: isCTFLoading } = useCtfQuery();
+  const { data: ctfData, isLoading: isCTFLoading, error: ctfError } = useCtfQuery();
   const { data: teamsData, isLoading: teamsLoading } = useTeamsQuery();
   const { data: usersData, isLoading: usersLoading } = useUsersQuery();
-  const { data: currentUser, isLoading: currentUserLoading } = useCurrentUser();
   const { data: rulesData, isLoading: rulesLoading } = useFetchRules();
 
   const deleteMut = useDeleteCTF();
 
-  const [showCreate, setShowCreate] = useState(false);
-  const [showRules, setShowRules] = useState(false);
+  const currentUser = useUserStore((store) => store.currentUser);
+
+  const [showCreate, setShowCreate] = useState<boolean>(false);
+  const [showRules, setShowRules] = useState<boolean>(false);
   const [editRec, setEditRec] = useState<Events | null>(null);
   const [toDeleteId, setToDeleteId] = useState<string | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showAcceptUserModal, setShowAcceptUserModal] = useState<boolean>(false);
 
   const ctfRef = useRef<HTMLDivElement>(null);
   const teamsRef = useRef<HTMLDivElement>(null);
@@ -84,6 +87,14 @@ const AdminPage: React.FC = () => {
   const onUsersTableChange = useCallback(() => {
     scrollToRef(usersRef);
   }, []);
+
+  useEffect(() => {
+    if (ctfError && ctfError.status === 451) {
+      setShowAcceptUserModal(true);
+    }
+  }, [ctfError]);
+
+  const existingNickname = currentUser?.nickname;
 
   return (
     <>
@@ -170,6 +181,16 @@ const AdminPage: React.FC = () => {
         )}
         <Footer />
       </PageContainer>
+      {showAcceptUserModal && (
+        <AcceptUserModal
+          open={showAcceptUserModal}
+          onClose={() => {
+            setShowAcceptUserModal(false);
+          }}
+          isExistingUser={!!existingNickname}
+          existingNickname={existingNickname}
+        />
+      )}
     </>
   );
 };

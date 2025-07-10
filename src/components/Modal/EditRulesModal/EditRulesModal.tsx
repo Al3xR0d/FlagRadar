@@ -17,8 +17,8 @@ interface Props {
 }
 
 export const EditRulesModal: React.FC<Props> = ({ open, onClose, text }) => {
-  const [newText, setNewText] = useState(text);
-  const [reaccept, setReaccept] = useState(false);
+  const [newText, setNewText] = useState<string>(text);
+  const [reaccept, setReaccept] = useState<boolean>(false);
   const editRulesMutation = useEditRules();
   const setRules = useUserStore((store) => store.setRules);
 

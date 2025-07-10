@@ -23,8 +23,8 @@ interface Props {
 }
 
 export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members }) => {
-  const [isCreateVisibleButton, setCreateVisibleButton] = useState(false);
-  const [isCreateVisibleCancelButton, setCreateVisibleCancelButton] = useState(false);
+  const [isCreateVisibleButton, setCreateVisibleButton] = useState<boolean>(false);
+  const [isCreateVisibleCancelButton, setCreateVisibleCancelButton] = useState<boolean>(false);
 
   const curentUser = useUserStore((store) => store.currentUser);
   const isCaptain = curentUser?.properties === 'captain';

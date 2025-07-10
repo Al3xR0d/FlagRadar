@@ -21,7 +21,7 @@ const StyledDescriptions = styled(Descriptions)`
 const UserPage: React.FC = () => {
   const { data, isLoading } = useCurrentUser();
   const [messageApi, contextHolder] = message.useMessage();
-  const [isCreateVisible, setCreateVisible] = useState(false);
+  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
   const currentRules = useFetchRules();
 
   const success = () => {
