@@ -8,12 +8,11 @@ export default defineConfig({
     include: ['antd'],
   },
   server: {
-    cors: true,
     proxy: {
-      '/api': {
-        target: process.env?.VITE_BACKEND_API || import.meta.env?.VITE_BACKEND_API,
+      '/sbcsm_flagradar/api/v1': {
+        target: process.env.VITE_BACKEND_API,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/sbcsm_flagradar\/api\/v1/, ''),
       },
     },
   },

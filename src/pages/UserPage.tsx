@@ -71,9 +71,23 @@ const UserPage: React.FC = () => {
                     {data?.jwt ? (
                       <AntdButton
                         icon={<CopyOutlined />}
-                        onClick={() => {
-                          navigator.clipboard.writeText(`${data?.jwt}`);
-                          success();
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(`${data?.jwt || ''}`);
+                            success();
+                          } catch (err) {
+                            const textArea = document.createElement('textarea');
+                            textArea.value = data?.jwt || '';
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            try {
+                              document.execCommand('copy');
+                              success();
+                            } catch (fallbackErr) {
+                              console.error('Не удалось скопировать текст:', fallbackErr);
+                            }
+                            document.body.removeChild(textArea);
+                          }
                         }}
                       />
                     ) : (

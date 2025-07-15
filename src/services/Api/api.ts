@@ -74,4 +74,4 @@ class Api {
   }
 }
 
-export const api = new Api(import.meta.env.VITE_API_URL || '/api');
+export const api = new Api(import.meta.env.VITE_API_URL);
