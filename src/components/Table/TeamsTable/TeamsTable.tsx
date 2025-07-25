@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Empty from 'antd/es/empty';
 import { AntdTable } from '@/shared/ui/Table';
 import { Teams } from '@/types';

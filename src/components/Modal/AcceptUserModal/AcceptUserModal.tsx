@@ -71,9 +71,6 @@ export const AcceptUserModal: React.FC<Props> = ({
         onSuccess: async () => {
           message.success('Добро пожаловать!');
           onClose();
-          // await events.refetch();
-          // await teams.refetch();
-          // await users.refetch();
           queryClient.invalidateQueries(['team']);
           queryClient.invalidateQueries(['ctfs']);
           queryClient.invalidateQueries(['adminUsers']);

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import loading from '../../../Images/loading.gif';
+import loading from '../../../images/loading.gif';
 
 export const CustomSpin: FC = () => {
   return (

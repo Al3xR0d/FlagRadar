@@ -5,6 +5,7 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { getApiBaseUrl } from './runtimeApi';
 
 class Api {
   private api: AxiosInstance;
@@ -74,4 +75,6 @@ class Api {
   }
 }
 
-export const api = new Api(import.meta.env.VITE_API_URL);
+const HOST = getApiBaseUrl();
+
+export const api = new Api(HOST);

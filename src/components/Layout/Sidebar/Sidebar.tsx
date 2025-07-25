@@ -81,9 +81,6 @@ export const Sidebar = () => {
 
   const items = [
     { key: '/user', label: 'Профиль', icon: <i className="fas fa-user" aria-hidden="true" /> },
-    { key: '/ctf', label: 'CTF', icon: <i className="fas fa-flag" aria-hidden="true" /> },
-    { key: '/ai', label: 'AI Помощник', icon: <i className="fas fa-brain" /> },
-    { key: '/rating', label: 'Рейтинг', icon: <i className="fas fa-line-chart" /> },
     ...(!isAdmin
       ? [
           {
@@ -93,6 +90,9 @@ export const Sidebar = () => {
           },
         ]
       : []),
+    { key: '/ctf', label: 'CTF', icon: <i className="fas fa-flag" aria-hidden="true" /> },
+    { key: '/ai', label: 'AI Помощник', icon: <i className="fas fa-brain" /> },
+    { key: '/rating', label: 'Рейтинг', icon: <i className="fas fa-line-chart" /> },
     ...(isAdmin
       ? [
           {

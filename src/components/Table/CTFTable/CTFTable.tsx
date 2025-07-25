@@ -125,8 +125,12 @@ export const CTFTable: FC<Props> = memo(
           fetchResults(
             { eventId: selectedEvent.uuid, jsonData: modifiedJsonData },
             {
-              onSuccess: () => {
-                message.success('Данные успешно загружены');
+              onSuccess: (data: { result: string; msg?: string }) => {
+                if (data.result === 'Err') {
+                  message.error(data.msg || 'Неизвестная ошибка');
+                } else {
+                  message.success('Данные успешно загружены');
+                }
               },
               onError: (error: any) => {
                 console.error('Ошибка загрузки данных:', error.response?.data || error.message);
@@ -376,7 +380,6 @@ export const CTFTable: FC<Props> = memo(
         {isModalResultsOpen && results && (
           <ResultsModal
             open={isModalResultsOpen}
-            // eventId={selectedEvent?.uuid}
             results={results}
             isLoading={isResultsLoading}
             isError={isResultsError}
