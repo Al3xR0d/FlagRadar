@@ -7,12 +7,12 @@ export const AntdClose: FC = ({}) => {
 };
 
 const StyledClose = styled(CloseOutlined)`
-  color: #e0e0ff;
+  color: #eef3ff;
   font-size: 12px;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #ffffff;
+    color: #eef3ff;
     font-size: 18px;
     transform: scale(1.1);
     color: tomato;

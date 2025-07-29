@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import Flex from 'antd/es/flex';
 import { FC } from 'react';
-import { AntdButton } from '../../shared/ui/Button';
+import { AntdButton } from '@/shared/ui/Button';
 import { Icon } from '@/shared/ui/Icon';
 import { StyledCard } from '@/shared/ui/StyledCard';
 
 const Wrapper = styled.span`
-  color: #e0e0ff;
+  color: #eef3ff;
 `;
 
 interface Props {

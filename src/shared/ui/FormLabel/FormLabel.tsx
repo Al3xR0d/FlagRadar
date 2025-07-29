@@ -6,6 +6,6 @@ interface Props {
 }
 
 export const FormLabel = styled.span<Props>`
-  color: ${({ color }) => color ?? '#e0e0ff'};
+  color: ${({ color }) => color ?? '#EEF3FF'};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0}px;
 `;

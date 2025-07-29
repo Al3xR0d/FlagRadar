@@ -19,7 +19,7 @@ const StyledSelect = styled(Select)`
   &&& {
     .ant-select-selector {
       background: #121218;
-      color: #e0e0ff;
+      color: #eef3ff;
       border: 1px solid #25253a;
       transition: all 0.3s;
     }
@@ -35,12 +35,12 @@ const StyledSelect = styled(Select)`
   }
 
   && .ant-select-arrow {
-    color: #e0e0ff;
+    color: #eef3ff;
   }
 
   && .ant-select-selection-item,
   && .ant-select-selection-placeholder {
-    color: #e0e0ff;
+    color: #eef3ff;
   }
 
   && .ant-select-dropdown {
@@ -52,7 +52,7 @@ const StyledSelect = styled(Select)`
   }
 
   && .ant-select-item {
-    color: #e0e0ff;
+    color: #eef3ff;
     background: #121218;
 
     &:hover:not(.ant-select-item-option-disabled) {
@@ -62,7 +62,7 @@ const StyledSelect = styled(Select)`
 
   && .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
     background: #25253a;
-    color: #e0e0ff;
+    color: #eef3ff;
   }
 
   && .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
@@ -71,7 +71,7 @@ const StyledSelect = styled(Select)`
 
   && .ant-select-dropdown .ant-select-dropdown-search .ant-input {
     background: #121218;
-    color: #e0e0ff;
+    color: #eef3ff;
     border-color: #25253a;
 
     &:hover {

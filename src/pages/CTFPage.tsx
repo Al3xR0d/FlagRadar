@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { CTFTable } from '../components/Table/CTFTable/CTFTable';
+import { CTFTable } from '@/components/Table/CTFTable/CTFTable';
 import { useCtfQuery } from '@/hooks/useQueries';
 import { Header } from '@/components/Layout/Header';
 import { Footer } from '@/components/Layout/Footer';

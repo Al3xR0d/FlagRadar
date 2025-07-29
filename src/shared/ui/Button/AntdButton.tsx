@@ -3,12 +3,13 @@ import Button from 'antd/es/button';
 import Tooltip from 'antd/es/tooltip';
 import styled from 'styled-components';
 import { ButtonType } from 'antd/es/button';
+import { MouseEvent } from 'react';
 
 interface Props {
   disabled?: boolean;
   loading?: boolean;
   type?: ButtonType;
-  onClick: () => void;
+  onClick: (e: MouseEvent<HTMLElement>) => void;
   icon?: ReactNode;
   text?: string;
   key?: string;
@@ -62,14 +63,14 @@ const StyledButton = styled(Button)<StyledButtonProps>`
     min-width: ${({ $compact }) => ($compact ? 'unset' : '132px')};
     /* max-width: 180px; */
     background: #00ff9d;
-    color: #0e0e14;
+    color: #212121;
     border-color: #00ff9d;
 
     &:hover,
     &:focus,
     &:active {
       background: #00cc7d;
-      color: #0e0e14;
+      color: #212121;
       border-color: #00ff9d;
       box-shadow: 0 0 15px rgba(0, 255, 157, 0.6), 0 0 30px rgba(0, 255, 157, 0.4),
         0 0 45px rgba(0, 255, 157, 0.2);
@@ -85,7 +86,7 @@ const StyledButton = styled(Button)<StyledButtonProps>`
   &&.ant-btn:focus,
   &&.ant-btn:active {
     background: #00ff9d;
-    color: #0e0e14;
+    color: #212121;
     border-color: #00ff9d;
   }
 `;

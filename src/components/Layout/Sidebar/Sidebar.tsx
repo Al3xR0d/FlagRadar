@@ -62,12 +62,12 @@ const StyledMenu = styled(Menu)`
   & .ant-menu-item:hover,
   & .ant-menu-item-active {
     background-color: rgba(0, 255, 157, 0.08) !important;
-    color: #e0e0ff !important;
+    color: #eef3ff !important;
   }
 
   & .ant-menu-item-selected {
     background-color: rgba(0, 255, 157, 0.08);
-    color: #e0e0ff;
+    color: #eef3ff;
   }
 `;
 

@@ -23,7 +23,7 @@ interface TextAreaPropsExtended extends TextAreaProps {
 const commonStyles = `
   &&& {
     background: #121218;
-    color: #e0e0ff;
+    color: #EEF3FF;
     border: 1px solid #25253a;
     transition: all 0.3s;
 
@@ -45,7 +45,7 @@ const commonStyles = `
     }
 
     &::placeholder {
-      color: #e0e0ff;
+      color: #EEF3FF;
       opacity: 0.6;
     }
   }

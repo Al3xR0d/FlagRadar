@@ -24,12 +24,12 @@ interface Props {
 }
 
 const StyledCheckbox = styled(Checkbox)`
-  color: #e0e0ff;
+  color: #eef3ff;
   margin: 0;
 `;
 
 const StyledFormItem = styled(Form.Item)`
-  color: #e0e0ff;
+  color: #eef3ff;
 `;
 
 export const AcceptUserModal: React.FC<Props> = ({
@@ -42,6 +42,8 @@ export const AcceptUserModal: React.FC<Props> = ({
   const [accepted, setAccepted] = useState<boolean>(false);
 
   const rulesText = useUserStore((store) => store.rules);
+  const curUser = useUserStore((store) => store.currentUser?.nickname);
+
   const mutation = useAcceptUser();
   const events = useCtfQuery();
   const teams = useTeamsQuery();
@@ -50,18 +52,19 @@ export const AcceptUserModal: React.FC<Props> = ({
   const queryClient = useQueryClient();
 
   const handleSubmit = async () => {
-    if (accepted && nickname === '') {
-      message.error('Введите никнейм');
-      return;
-    }
+    // if (accepted && nickname === '') {
+    //   message.error('Введите никнейм');
+    //   return;
+    // }
 
-    if (accepted && nickname.trim().length === 0) {
-      message.error('Введите валидный никнейм');
-      return;
-    }
+    // if (accepted && nickname.trim().length === 0) {
+    //   message.error('Введите валидный никнейм');
+    //   return;
+    // }
 
     if (!accepted) {
-      message.error('Вы должны принять правила и политику обработки персональных данных');
+      // message.error('Вы должны принять правила и политику обработки персональных данных');
+      message.error('Вы должны принять правила');
       return;
     }
 
@@ -83,11 +86,17 @@ export const AcceptUserModal: React.FC<Props> = ({
     );
   };
 
+  // useEffect(() => {
+  //   if (isExistingUser) {
+  //     setNickname(existingNickname);
+  //   }
+  // }, [isExistingUser, existingNickname]);
+
   useEffect(() => {
-    if (isExistingUser) {
-      setNickname(existingNickname);
+    if (curUser) {
+      setNickname(curUser);
     }
-  }, [isExistingUser, existingNickname]);
+  }, [curUser]);
 
   return (
     <AntdModal
@@ -100,10 +109,11 @@ export const AcceptUserModal: React.FC<Props> = ({
       footer={
         <Flex justify="space-between" align="center">
           <StyledCheckbox checked={accepted} onChange={(e) => setAccepted(e.target.checked)}>
-            Я принимаю правила платформы{' '}
+            Я принимаю правила платформы
+            {/* Я принимаю правила платформы{' '}
             <Link href="https://www.sberbank.ru/privacy/policy#pdn" target="_blank">
               и политику обработки персональных данных
-            </Link>
+            </Link> */}
           </StyledCheckbox>
           <AntdButton onClick={handleSubmit} text="Принять" />
         </Flex>
@@ -117,14 +127,14 @@ export const AcceptUserModal: React.FC<Props> = ({
           {' '}
           <TextWrapper>{rulesText || <CustomSpin />}</TextWrapper>
         </StyledFormItem>
-        <Form.Item>
+        {/* <Form.Item>
           <AntdInput
             value={nickname}
             onChange={(e) => !isExistingUser && setNickname(e.target.value)}
             disabled={isExistingUser}
             placeholder={isExistingUser ? 'Ваш никнейм' : 'Введите никнейм'}
           />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </AntdModal>
   );

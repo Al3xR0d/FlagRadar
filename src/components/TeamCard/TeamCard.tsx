@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { AntdButton } from '@/shared/ui/Button';
-import { EditTeamModal } from '../Modal/EditTeamModal';
+import { EditTeamModal } from '@/components/Modal/EditTeamModal';
 import { AntdCancelButton } from '@/shared/ui/CancelButton';
 import Flex from 'antd/es/flex';
-import { LeaveTeamModal } from '../Modal/LeaveTeamModal';
+import { LeaveTeamModal } from '@/components/Modal/LeaveTeamModal';
 import { useUserStore } from '@/store/userStore';
 import { Icon } from '@/shared/ui/Icon';
 import { StyledCard } from '@/shared/ui/StyledCard';

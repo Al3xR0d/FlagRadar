@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AntLayout from 'antd/es/layout';
-import { Sidebar } from '../Sidebar';
+import { Sidebar } from '@/components/Layout/Sidebar';
 import { AcceptUserModal } from '@/components/Modal/AcceptUserModal';
 import { useCurrentUserFull } from '@/hooks/useQueries';
 
@@ -19,7 +19,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     if (!isLoading) {
       const msg = response?.msg;
-      if (msg === 'User not exists') {
+      if (msg === 'User not exists' || msg === undefined) {
         setShowModal(true);
       }
     }

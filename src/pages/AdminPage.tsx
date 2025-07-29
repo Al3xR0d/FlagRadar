@@ -111,7 +111,7 @@ const AdminPage: React.FC = () => {
                   icon={
                     <Icon
                       className="fa-solid fa-plus"
-                      color="#0e0e14"
+                      color="#212121"
                       marginRight="0"
                       fontSize="15"
                     />

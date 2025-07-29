@@ -49,7 +49,7 @@ const UserPage: React.FC = () => {
               >
                 {data?.nickname}
               </Descriptions.Item>
-              <Descriptions.Item
+              {/* <Descriptions.Item
                 label="Личный email"
                 style={{ color: '#e0e0ff', border: '1px solid #25253a' }}
               >
@@ -60,7 +60,7 @@ const UserPage: React.FC = () => {
                 style={{ color: '#e0e0ff', border: '1px solid #25253a' }}
               >
                 {data?.description}
-              </Descriptions.Item>
+              </Descriptions.Item> */}
               <Descriptions.Item
                 label="JWT для обращения в поддержку"
                 style={{ color: '#e0e0ff', border: '1px solid #25253a' }}
@@ -97,7 +97,7 @@ const UserPage: React.FC = () => {
                 </Flex>
               </Descriptions.Item>
             </StyledDescriptions>
-            <Flex justify="start">
+            {/* <Flex justify="start">
               <AntdButton
                 icon={
                   <Icon className="fas fa-edit" color="#0e0e14" marginRight="8" fontSize="15" />
@@ -105,10 +105,10 @@ const UserPage: React.FC = () => {
                 text="Редактировать"
                 onClick={() => setCreateVisible(true)}
               />
-            </Flex>
+            </Flex> */}
           </Flex>
         </StyledCard>
-        {isCreateVisible && (
+        {/* {isCreateVisible && (
           <EditUserModal
             visible={isCreateVisible}
             onClose={() => setCreateVisible(false)}
@@ -116,7 +116,7 @@ const UserPage: React.FC = () => {
             email={data?.email}
             description={data?.description}
           />
-        )}
+        )} */}
         <Footer />
       </PageContainer>
     </>

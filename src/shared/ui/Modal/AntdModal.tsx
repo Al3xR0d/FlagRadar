@@ -47,7 +47,7 @@ export const AntdModal: FC<Props> = ({
       title={
         titleContent ?? (
           <>
-            <span style={{ color: '#e0e0ff' }}>
+            <span style={{ color: '#EEF3FF' }}>
               {iconClassName && (
                 <i className={iconClassName} aria-hidden="true" style={{ marginRight: 8 }} />
               )}
@@ -63,8 +63,8 @@ export const AntdModal: FC<Props> = ({
       centered={top === false ? centered : undefined}
       width={width}
       styles={{
-        header: { background: '#1a1a24', color: '#e0e0ff' },
-        body: { background: '#1a1a24', color: '#e0e0ff' },
+        header: { background: '#1a1a24', color: '#EEF3FF' },
+        body: { background: '#1a1a24', color: '#EEF3FF' },
         content: { background: '#1a1a24' },
         mask: { backdropFilter: 'blur(5px)' },
       }}

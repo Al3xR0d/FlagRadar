@@ -3,12 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { useUserStore } from '@/store/userStore';
 
-const CTFPage = lazy(() => import('../pages/CTFPage'));
-const TeamPage = lazy(() => import('../pages/TeamPage'));
-const AdminPage = lazy(() => import('../pages/AdminPage'));
-const UserPage = lazy(() => import('../pages/UserPage'));
-const RaitingPage = lazy(() => import('../pages/RatingPage'));
-const AIPage = lazy(() => import('../pages/AIPage'));
+const CTFPage = lazy(() => import('@/pages/CTFPage'));
+const TeamPage = lazy(() => import('@/pages/TeamPage'));
+const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const UserPage = lazy(() => import('@/pages/UserPage'));
+const RaitingPage = lazy(() => import('@/pages/RatingPage'));
+const AIPage = lazy(() => import('@/pages/AIPage'));
 
 export const AppRouter: React.FC = () => {
   const currentUser = useUserStore((store) => store.currentUser);

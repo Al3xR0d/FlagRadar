@@ -11,7 +11,7 @@ export const TEAM_URL = `/teams`;
 export const USER_URL = `/users`;
 export const RULES_URL = `/rules`;
 export const RAITING_URL = `/rating`;
-export const AI_URL = `/question`;
+export const AI_URL = `assistant/question`;
 
 export const TEAM_PARTICIPANTS_URL = `/participants`;
 export const ADMIN_TEAMS_URL = `/admin/teams`;

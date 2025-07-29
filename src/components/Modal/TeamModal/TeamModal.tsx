@@ -23,7 +23,7 @@ const StyledModal = styled(Modal)`
 
   & .ant-modal-body {
     background: #151522;
-    color: #e0e0ff;
+    color: #eef3ff;
   }
 
   & .ant-modal-mask {
@@ -32,13 +32,13 @@ const StyledModal = styled(Modal)`
 `;
 
 const ModalTitle = styled.span`
-  color: #e0e0ff;
+  color: #eef3ff;
 `;
 
 const StyledCard = styled(Card)`
   background: #0e0e14;
   border: 1px solid #25253a;
-  color: #e0e0ff;
+  color: #eef3ff;
 
   & .ant-card-head {
     border-bottom: none;
@@ -135,6 +135,9 @@ export const TeamModal: React.FC<Props> = ({ open, onClose, name, token, members
       maskClosable={false}
       width={1100}
       footer={null}
+      styles={{
+        mask: { backdropFilter: 'blur(5px)' },
+      }}
     >
       <ContentWrapper>
         <Row gutter={[16, 16]}>

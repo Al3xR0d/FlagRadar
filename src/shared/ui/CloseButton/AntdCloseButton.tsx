@@ -33,14 +33,14 @@ const StyledButton = styled(Button)`
   && {
     max-width: 180px;
     background: #151522;
-    color: #e0e0ff;
+    color: #eef3ff;
     border: 1px solid #25253a;
 
     &:hover,
     &:focus,
     &:active {
       background: #151522;
-      color: #e0e0ff;
+      color: #eef3ff;
     }
 
     &:disabled {
@@ -53,7 +53,7 @@ const StyledButton = styled(Button)`
   &&.ant-btn:focus,
   &&.ant-btn:active {
     background: #151522;
-    color: #e0e0ff;
+    color: #eef3ff;
     border-color: #00ff9d;
   }
 `;

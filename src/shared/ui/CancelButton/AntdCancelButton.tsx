@@ -61,14 +61,14 @@ const StyledButton = styled(Button)<StyledButtonProps>`
     min-width: ${({ $compact }) => ($compact ? 'unset' : '132px')};
     max-width: 180px;
     background: #ff4d4f;
-    color: #ffffff;
+    color: #eef3ff;
     border-color: #ff4d4f;
 
     &:hover,
     &:focus,
     &:active {
       background: #d9363e;
-      color: #ffffff;
+      color: #eef3ff;
       border-color: #ff4d4f;
       box-shadow: 0 0 15px rgba(255, 77, 79, 0.6), 0 0 30px rgba(255, 77, 79, 0.4),
         0 0 45px rgba(255, 77, 79, 0.2);
@@ -84,7 +84,7 @@ const StyledButton = styled(Button)<StyledButtonProps>`
   &&.ant-btn:focus,
   &&.ant-btn:active {
     background: #ff4d4f;
-    color: #ffffff;
+    color: #eef3ff;
     border-color: #ff4d4f;
   }
 `;

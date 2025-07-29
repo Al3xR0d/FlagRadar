@@ -42,10 +42,12 @@ import {
   EditedRules,
   AccessMeRequest,
   Role,
+  Question,
 } from '../types';
 import { useUserStore } from '@/store/userStore';
 import notification from 'antd/es/notification';
 import { AxiosError } from 'axios';
+import message from 'antd/es/message';
 
 export const defaultQueryOptions = {
   retry: false,
@@ -305,6 +307,14 @@ export const useTeamsRaiting = ({ year, page }: { year: number; page: number }) 
 
 export const useFetchAI = () => {
   return useMutation({
-    mutationFn: ({ role, question }: { role: Role; question: string }) => fetchAI(role, question),
+    mutationFn: ({
+      role,
+      session_id,
+      message,
+    }: {
+      role: Role;
+      session_id: string;
+      message: Question;
+    }) => fetchAI(role, session_id, message),
   });
 };

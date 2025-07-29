@@ -33,7 +33,7 @@ export const StyledEmpty = styled(Empty)`
   }
 
   .ant-empty-description {
-    color: #e0e0ff;
+    color: #eef3ff;
     text-align: center;
   }
 `;

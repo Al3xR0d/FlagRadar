@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState, memo, useRef } from 'react';
+import React, { FC, useMemo, useState, memo, useRef, useEffect } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import Space from 'antd/es/space';
 import Empty from 'antd/es/empty';
@@ -156,7 +156,7 @@ export const CTFTable: FC<Props> = memo(
       }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (isResultsError && resultsError) {
         message.error('Ошибка при загрузке результатов');
       }

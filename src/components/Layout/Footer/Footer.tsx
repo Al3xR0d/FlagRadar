@@ -15,12 +15,12 @@ export const Footer: FC = () => {
 
   return (
     <StyledFooter>
-      <Flex justify="center">
+      {/* <Flex justify="center">
         <Link href="https://www.sberbank.ru/privacy/policy#pdn" target="_blank">
           Политика обработки персональных данных в ПАО Сбербанк
         </Link>
       </Flex>
-      {isModalOpen && <PolicyModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <PolicyModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />} */}
     </StyledFooter>
   );
 };

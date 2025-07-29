@@ -13,6 +13,8 @@ import {
   ResultsTeamsYearsResponse,
   Answer,
   Role,
+  Question,
+  AnswerListResponse,
 } from '@/types';
 import {
   EVENTS_URL,
@@ -49,7 +51,8 @@ export const leaveCTF = (eventId: string) =>
 export const editCTF = (id: string, data: Events) =>
   api.PATCH<EventsListResponse>(`${EVENTS_URL}/${id}`, data);
 
-export const deleteCTF = (uuid: string) => api.POST(`${EVENTS_URL}/delete`, { uuid: uuid });
+// export const deleteCTF = (uuid: string) => api.POST(`${EVENTS_URL}/delete`, { uuid: uuid });
+export const deleteCTF = (uuid: string) => api.DELETE(`${EVENTS_URL}/${uuid}`);
 
 export const fetchTeamParticipants = () => api.GET<UserListResponse>(TEAM_PARTICIPANTS_URL);
 
@@ -97,5 +100,8 @@ export const fetchResultsTeamYears = async (
   year: number,
   page: number,
 ): Promise<ResultsTeamsYearsResponse> => api.GET(`${RAITING_URL}/teams?year=${year}&page=${page}`);
-export const fetchAI = async (role: Role, question: string): Promise<Answer> =>
-  api.POST(`${AI_URL}?role=${role}`, { question });
+export const fetchAI = async (
+  role: Role,
+  session_id: string,
+  message: Question,
+): Promise<AnswerListResponse> => api.POST(`${AI_URL}`, { role, session_id, message });

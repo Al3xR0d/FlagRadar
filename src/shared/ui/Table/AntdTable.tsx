@@ -33,7 +33,7 @@ const StyledTableWrapper = styled.div`
     .ant-table-tbody > tr > td {
       border-bottom: 1px solid #25253a;
       background-color: #151522;
-      color: #ffffff;
+      color: #eef3ff;
       transition: background-color 0.2s ease;
     }
 
@@ -46,14 +46,14 @@ const StyledTableWrapper = styled.div`
     }
 
     .ant-table-title {
-      color: #e0e0ff;
+      color: #eef3ff;
       border-bottom: 1px solid #25253a;
       padding: 12px 16px;
       font-size: 24px;
     }
 
     .ant-empty-description {
-      color: #e0e0ff;
+      color: #eef3ff;
     }
 
     .ant-pagination-item,

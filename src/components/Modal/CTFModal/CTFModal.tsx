@@ -42,7 +42,7 @@ const FlexCol = styled(Col)`
 const StyledCard = styled(Card)`
   background: #0e0e14;
   border: 1px solid #25253a;
-  color: #e0e0ff;
+  color: #eef3ff;
   flex: 1;
 
   & .ant-card-head {
