@@ -310,11 +310,11 @@ export const useFetchAI = () => {
     mutationFn: ({
       role,
       session_id,
-      message,
+      content,
     }: {
       role: Role;
       session_id: string;
-      message: Question;
-    }) => fetchAI(role, session_id, message),
+      content: string;
+    }) => fetchAI(role, session_id, content),
   });
 };

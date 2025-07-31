@@ -100,8 +100,9 @@ export const fetchResultsTeamYears = async (
   year: number,
   page: number,
 ): Promise<ResultsTeamsYearsResponse> => api.GET(`${RAITING_URL}/teams?year=${year}&page=${page}`);
+
 export const fetchAI = async (
   role: Role,
   session_id: string,
-  message: Question,
-): Promise<AnswerListResponse> => api.POST(`${AI_URL}`, { role, session_id, message });
+  content: string,
+): Promise<AnswerListResponse> => api.POST(`${AI_URL}`, { role, session_id, content });

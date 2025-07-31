@@ -1,24 +1,23 @@
 import { FC } from 'react';
 import loading from '@/images/loading.gif';
+import styled from 'styled-components';
+
+const SpinContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SpinImage = styled.img`
+  width: 100px;
+`;
 
 export const CustomSpin: FC = () => {
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <img
-        src={loading}
-        alt="Загрузка..."
-        style={{
-          width: '100px',
-        }}
-      />
-    </div>
+    <SpinContainer>
+      <SpinImage src={loading} alt="Загрузка..." />
+    </SpinContainer>
   );
 };

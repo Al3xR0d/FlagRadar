@@ -3,11 +3,11 @@ import { PageContainer } from '@/shared/ui/PageContainer';
 import { Header } from '@/components/Layout/Header';
 import { Footer } from '@/components/Layout/Footer';
 import { AntdTabs } from '@/shared/ui/Tabs';
-import { Role, Question, AnswerListResponse } from '@/types';
+import { Role, AnswerListResponse } from '@/types';
 import { ChatBox } from '@/shared/ui/ChatBox';
 import { useUserStore } from '@/store/userStore';
 import { useFetchAI } from '@/hooks/useQueries';
-import { SubmitAIModal } from '@/components/Modal/SubmitAIModal';
+// import { SubmitAIModal } from '@/components/Modal/SubmitAIModal';
 
 interface ChatMessage {
   id: string;
@@ -18,8 +18,8 @@ interface ChatMessage {
 
 const AIPage: React.FC = () => {
   const [activeKey, setActiveKey] = useState<string>('1');
-  const [pendingKey, setPendingKey] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [pendingKey, setPendingKey] = useState<string | null>(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [chats, setChats] = useState<Record<string, ChatMessage[]>>({ '1': [], '2': [] });
 
   const userRoleByTab: Record<string, Role> = { '1': 'blue', '2': 'red' };
@@ -28,22 +28,23 @@ const AIPage: React.FC = () => {
 
   const onTabClick = (key: string) => {
     if (key === activeKey) return;
-    setPendingKey(key);
-    setIsModalOpen(true);
+    setActiveKey(key);
+    // setPendingKey(key);
+    // setIsModalOpen(true);
   };
 
-  const handleConfirm = () => {
-    if (pendingKey) {
-      setActiveKey(pendingKey);
-    }
-    setIsModalOpen(false);
-    setPendingKey(null);
-  };
+  // const handleConfirm = () => {
+  //   if (pendingKey) {
+  //     setActiveKey(pendingKey);
+  //   }
+  //   setIsModalOpen(false);
+  //   setPendingKey(null);
+  // };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setPendingKey(null);
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  //   setPendingKey(null);
+  // };
 
   const handleSend = async (tabKey: string, text: string) => {
     const currentUserRole = userRoleByTab[tabKey];
@@ -80,9 +81,8 @@ const AIPage: React.FC = () => {
       return;
     }
 
-    const message: Question = { content: text };
     mutate(
-      { role: currentUserRole, session_id, message },
+      { role: currentUserRole, session_id, content: text },
       {
         onSuccess: (data: AnswerListResponse) => {
           setChats((prev) => {
@@ -118,6 +118,9 @@ const AIPage: React.FC = () => {
     <>
       <PageContainer vertical>
         <Header title="AI Помощник" />
+        <span style={{ color: '#EEF3FF' }}>
+          В рамках эксперементальной функции AI помощника доступно 6 одновременных пользователей
+        </span>
         <AntdTabs activeKey={activeKey} onTabClick={onTabClick}>
           <AntdTabs.TabPane tab="Защитник" key="1">
             <ChatBox
@@ -136,12 +139,12 @@ const AIPage: React.FC = () => {
         </AntdTabs>
         <Footer />
       </PageContainer>
-      <SubmitAIModal
+      {/* <SubmitAIModal
         open={isModalOpen}
         onCancel={handleCancel}
         handleSubmit={handleConfirm}
         confirmLoading={false}
-      />
+      /> */}
     </>
   );
 };

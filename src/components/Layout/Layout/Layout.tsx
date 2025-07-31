@@ -15,11 +15,12 @@ const { Content } = AntLayout;
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { data: response, isLoading } = useCurrentUserFull();
   const [showModal, setShowModal] = useState<boolean>(false);
-
+  console.log(response);
   useEffect(() => {
     if (!isLoading) {
       const msg = response?.msg;
-      if (msg === 'User not exists' || msg === undefined) {
+
+      if (msg === 'User not exists' || (msg === undefined && response !== undefined)) {
         setShowModal(true);
       }
     }
@@ -29,7 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     <AntLayout style={{ backgroundColor: '#121218' }}>
       <Sidebar />
       <Content style={{ margin: 16 }}>{children}</Content>
-      <AcceptUserModal open={showModal} onClose={() => setShowModal(false)} />
+      {showModal && <AcceptUserModal open={showModal} onClose={() => setShowModal(false)} />}
     </AntLayout>
   );
 };
