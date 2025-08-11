@@ -15,7 +15,7 @@ const { Content } = AntLayout;
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { data: response, isLoading } = useCurrentUserFull();
   const [showModal, setShowModal] = useState<boolean>(false);
-  console.log(response);
+
   useEffect(() => {
     if (!isLoading) {
       const msg = response?.msg;

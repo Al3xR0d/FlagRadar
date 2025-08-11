@@ -9,6 +9,7 @@ const AdminPage = lazy(() => import('@/pages/AdminPage'));
 const UserPage = lazy(() => import('@/pages/UserPage'));
 const RaitingPage = lazy(() => import('@/pages/RatingPage'));
 const AIPage = lazy(() => import('@/pages/AIPage'));
+const MailPage = lazy(() => import('@/pages/MailPage'));
 
 export const AppRouter: React.FC = () => {
   const currentUser = useUserStore((store) => store.currentUser);
@@ -23,6 +24,7 @@ export const AppRouter: React.FC = () => {
         <Route path="/rating" element={<RaitingPage />} />
         {!isAdmin && <Route path="/team" element={<TeamPage />} />}
         {isAdmin && <Route path="/admin" element={<AdminPage />} />}
+        {isAdmin && <Route path="/mail" element={<MailPage />} />}
         <Route path="*" element={<Navigate to="/user" replace />} />
       </Routes>
     </Suspense>

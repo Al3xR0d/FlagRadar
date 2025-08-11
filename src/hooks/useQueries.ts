@@ -28,6 +28,8 @@ import {
   deleteResults,
   fetchResultsTeamYears,
   fetchAI,
+  sendMail,
+  deligateCaptain,
 } from '../services/Api';
 import {
   User,
@@ -43,11 +45,14 @@ import {
   AccessMeRequest,
   Role,
   Question,
+  Mail,
+  ChangeCaptain,
 } from '../types';
 import { useUserStore } from '@/store/userStore';
 import notification from 'antd/es/notification';
 import { AxiosError } from 'axios';
 import message from 'antd/es/message';
+import { error } from 'console';
 
 export const defaultQueryOptions = {
   retry: false,
@@ -316,5 +321,48 @@ export const useFetchAI = () => {
       session_id: string;
       content: string;
     }) => fetchAI(role, session_id, content),
+  });
+};
+
+export const useSendMail = () => {
+  return useMutation({
+    mutationFn: ({ eventId, data }: { eventId: string; data: Mail }) => sendMail({ eventId, data }),
+    onSuccess: () => {
+      notification.success({
+        message: 'Сообщение направлено',
+        placement: 'topRight',
+      });
+    },
+    onError: (error: any) => {
+      notification.error({
+        message: `Ошибка при направлении сообщения: ${
+          error.response?.data?.message || 'Неизвестная ошибка'
+        }`,
+        description: 'Ошибка при направлении сообщения',
+        placement: 'topRight',
+      });
+    },
+  });
+};
+
+export const useDeligateCaptain = () => {
+  return useMutation({
+    mutationFn: ({ teamId, data }: { teamId: string; data: ChangeCaptain }) =>
+      deligateCaptain({ teamId, data }),
+    onSuccess: () => {
+      notification.success({
+        message: 'Права капитана переданы',
+        placement: 'topRight',
+      });
+    },
+    onError: (error: any) => {
+      notification.error({
+        message: `Ошибка при передачи прав капитана: ${
+          error.response?.data?.message || 'Неизвестная ошибка'
+        }`,
+        description: 'Ошибка при передачи прав капитана',
+        placement: 'topRight',
+      });
+    },
   });
 };

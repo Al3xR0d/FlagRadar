@@ -18,3 +18,7 @@ export interface UserListResponse {
   data: User[];
   masg: string;
 }
+
+export interface ChangeCaptain {
+  nickname: string;
+}

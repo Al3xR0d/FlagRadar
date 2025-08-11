@@ -7,7 +7,6 @@ import { Role, AnswerListResponse } from '@/types';
 import { ChatBox } from '@/shared/ui/ChatBox';
 import { useUserStore } from '@/store/userStore';
 import { useFetchAI } from '@/hooks/useQueries';
-// import { SubmitAIModal } from '@/components/Modal/SubmitAIModal';
 
 interface ChatMessage {
   id: string;

@@ -15,6 +15,8 @@ import {
   Role,
   Question,
   AnswerListResponse,
+  Mail,
+  ChangeCaptain,
 } from '@/types';
 import {
   EVENTS_URL,
@@ -25,6 +27,7 @@ import {
   RULES_URL,
   RAITING_URL,
   AI_URL,
+  MAIL_URL,
 } from './url';
 import { api } from './api';
 
@@ -51,7 +54,6 @@ export const leaveCTF = (eventId: string) =>
 export const editCTF = (id: string, data: Events) =>
   api.PATCH<EventsListResponse>(`${EVENTS_URL}/${id}`, data);
 
-// export const deleteCTF = (uuid: string) => api.POST(`${EVENTS_URL}/delete`, { uuid: uuid });
 export const deleteCTF = (uuid: string) => api.DELETE(`${EVENTS_URL}/${uuid}`);
 
 export const fetchTeamParticipants = () => api.GET<UserListResponse>(TEAM_PARTICIPANTS_URL);
@@ -106,3 +108,9 @@ export const fetchAI = async (
   session_id: string,
   content: string,
 ): Promise<AnswerListResponse> => api.POST(`${AI_URL}`, { role, session_id, content });
+
+export const sendMail = ({ eventId, data }: { eventId: string; data: Mail }) =>
+  api.POST(`${MAIL_URL}/${eventId}/send`, { data });
+
+export const deligateCaptain = ({ teamId, data }: { teamId: string; data: ChangeCaptain }) =>
+  api.POST(`${TEAM_URL}/${teamId}/delegate`, data);

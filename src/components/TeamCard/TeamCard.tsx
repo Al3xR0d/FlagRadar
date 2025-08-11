@@ -8,6 +8,7 @@ import { LeaveTeamModal } from '@/components/Modal/LeaveTeamModal';
 import { useUserStore } from '@/store/userStore';
 import { Icon } from '@/shared/ui/Icon';
 import { StyledCard } from '@/shared/ui/StyledCard';
+import { TransferCaptainModal } from '@/components/Modal/TransferCaptainModal';
 
 const Wrapper = styled.span`
   color: #e0e0ff;
@@ -25,6 +26,7 @@ interface Props {
 export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members }) => {
   const [isCreateVisibleButton, setCreateVisibleButton] = useState<boolean>(false);
   const [isCreateVisibleCancelButton, setCreateVisibleCancelButton] = useState<boolean>(false);
+  const [isTransferCaptainModalOpen, setTransferCaptainModalOpen] = useState<boolean>(false);
 
   const curentUser = useUserStore((store) => store.currentUser);
   const isCaptain = curentUser?.properties === 'captain';
@@ -66,17 +68,39 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           ) : (
             <></>
           )}
+          {isCaptain ? (
+            <AntdButton
+              onClick={() => setTransferCaptainModalOpen(true)}
+              icon={
+                <Icon className="fa fa-exchange" color="#0e0e14" marginRight="8" fontSize="15" />
+              }
+              text="Передать права капитана"
+            />
+          ) : (
+            <></>
+          )}
         </Flex>
       </StyledCard>
-      <EditTeamModal
-        open={isCreateVisibleButton}
-        onClose={() => setCreateVisibleButton(false)}
-        name={name}
-      />
-      <LeaveTeamModal
-        open={isCreateVisibleCancelButton}
-        onClose={() => setCreateVisibleCancelButton(false)}
-      />
+      {isCreateVisibleButton && (
+        <EditTeamModal
+          open={isCreateVisibleButton}
+          onClose={() => setCreateVisibleButton(false)}
+          name={name}
+        />
+      )}
+      {isCreateVisibleCancelButton && (
+        <LeaveTeamModal
+          open={isCreateVisibleCancelButton}
+          onClose={() => setCreateVisibleCancelButton(false)}
+        />
+      )}
+      {isTransferCaptainModalOpen && (
+        <TransferCaptainModal
+          open={isTransferCaptainModalOpen}
+          onCancel={() => setTransferCaptainModalOpen(false)}
+          members={members}
+        />
+      )}
     </>
   );
 };

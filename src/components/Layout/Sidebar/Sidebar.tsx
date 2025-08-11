@@ -102,6 +102,15 @@ export const Sidebar = () => {
           },
         ]
       : []),
+    ...(isAdmin
+      ? [
+          {
+            key: '/mail',
+            label: 'Сообщения',
+            icon: <i className="fa fa-envelope" aria-hidden="true" />,
+          },
+        ]
+      : []),
   ];
 
   return (

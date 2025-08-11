@@ -15,6 +15,7 @@ import { useUserStore } from '@/store/userStore';
 
 const TeamPage: React.FC = () => {
   const { data: teamData, isLoading: isLoadingTeam, error } = useTeamByCurrentUser();
+
   const data: User[] = [];
   const isLoading = false;
   const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
