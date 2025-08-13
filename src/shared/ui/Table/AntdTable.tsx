@@ -34,15 +34,29 @@ const StyledTableWrapper = styled.div`
       border-bottom: 1px solid #25253a;
       background-color: #151522;
       color: #eef3ff;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.2s ease, opacity 0.2s ease;
     }
 
     .ant-table-tbody > tr:not(.ant-table-expanded-row):hover > td {
       background-color: #1e1e2d;
     }
 
+    .ant-table-tbody > tr.ant-table-row-selected > td {
+      color: #eef3ff;
+      background-color: #1e1e2d !important;
+      opacity: 0.3;
+    }
+
+    && .ant-table-tbody > tr.ant-table-row-selected:hover > td {
+      opacity: 0.3;
+    }
+
     .ant-table-tbody > tr:has(.ant-tooltip-open) > td {
       background-color: #151522;
+    }
+
+    .ant-table-footer {
+      background: rgb(18, 18, 24);
     }
 
     .ant-table-title {

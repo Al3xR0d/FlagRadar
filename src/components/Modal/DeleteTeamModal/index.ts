@@ -1,0 +1,1 @@
+export { DeleteTeamModal } from './DeleteTeamModal';

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Modal from 'antd/es/modal/Modal';
 import styled from 'styled-components';
 import { AntdClose } from '@/shared/ui/Close';
@@ -14,6 +15,9 @@ import { useUsersQuery } from '@/hooks/useQueries';
 import { AntdTable } from '@/shared/ui/Table';
 import { FormLabel } from '@/shared/ui/FormLabel';
 import { TextWrapper } from '@/shared/ui/TextWrapper';
+import { AntdButton } from '@/shared/ui/Button';
+import Flex from 'antd/es/flex';
+import { AddTeamModal } from '@/components/Modal/AddTeamModal';
 
 interface Props {
   open: boolean;
@@ -72,7 +76,9 @@ export const CTFModal: React.FC<Props> = ({
   regEnd,
   eventId,
 }) => {
+  const [isModalAddTeamOpen, setModalAddTeamOpen] = useState<boolean>(false);
   const { data, isLoading } = useEventById(eventId);
+
   const currentUser = useUserStore((store) => store.currentUser);
   const isAdmin = currentUser?.properties === 'org';
 
@@ -134,7 +140,19 @@ export const CTFModal: React.FC<Props> = ({
     ...(isAdmin
       ? [
           {
-            title: 'КОМАНДЫ',
+            title: (
+              <>
+                <Flex justify="space-between">
+                  КОМАНДЫ
+                  <AntdButton
+                    text="Добавить команду"
+                    onClick={() => {
+                      setModalAddTeamOpen(true);
+                    }}
+                  />
+                </Flex>
+              </>
+            ),
             content:
               uniqueTeamIds.length > 0 ? (
                 <TextWrapper>{uniqueTeamIds.join('\n')}</TextWrapper>
@@ -209,6 +227,13 @@ export const CTFModal: React.FC<Props> = ({
           </Row>
         </ContentWrapper>
       </Modal>
+      {isModalAddTeamOpen && (
+        <AddTeamModal
+          open={isModalAddTeamOpen}
+          onCancel={() => setModalAddTeamOpen(false)}
+          eventId={eventId || ''}
+        />
+      )}
     </>
   );
 };

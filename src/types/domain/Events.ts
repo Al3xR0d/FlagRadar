@@ -9,6 +9,7 @@ export const enum EventsStatus {
   FINISHED = 'finished',
   CANCELLED = 'cancelled',
   REGISTRATION = 'registration',
+  ARCHIVE = 'archive',
 }
 
 export interface Events {

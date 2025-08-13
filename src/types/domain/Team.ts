@@ -12,3 +12,13 @@ export interface TeamsListResponse {
   msg: string;
   result: string;
 }
+
+export interface EditTeam {
+  nickname: string;
+}
+
+export interface AddTeam {
+  name: string;
+  member_counts: number;
+  event_uuid: string;
+}

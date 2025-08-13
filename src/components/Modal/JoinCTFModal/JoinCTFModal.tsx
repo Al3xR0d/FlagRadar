@@ -5,8 +5,11 @@ import { AntdCloseButton } from '@/shared/ui/CloseButton';
 import { AntdButton } from '@/shared/ui/Button';
 import { useJoinCTF, useCurrentUser } from '@/hooks/useQueries';
 import notification from 'antd/es/notification';
+import Flex from 'antd/es/flex';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import Typography from 'antd/es/typography';
 
-interface ApiResponse {
+export interface ApiResponse {
   result: 'Ok' | 'Err';
   msg: string;
   data: unknown | null;
@@ -16,9 +19,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   eventId?: string;
+  privateCtf?: boolean;
 }
 
-export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
+export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId, privateCtf }) => {
   const [token, setToken] = useState<string>('');
   const mutation = useJoinCTF();
   const currentUserQuery = useCurrentUser();
@@ -27,7 +31,7 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
     if (!eventId) return;
 
     mutation.mutate(
-      { eventId, token },
+      { eventId, token: !privateCtf ? '' : token },
       {
         onSuccess: async (response: ApiResponse) => {
           if (response.result === 'Ok') {
@@ -48,7 +52,7 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
 
   return (
     <AntdModal
-      titleText="Введите токен"
+      titleText={!privateCtf ? 'Подтверждение участия' : 'Введите токен'}
       open={open}
       onCancel={onClose}
       top={false}
@@ -61,18 +65,26 @@ export const JoinCTFModal: React.FC<Props> = ({ open, onClose, eventId }) => {
             key="confirm"
             onClick={handleOk}
             text="Присоединиться"
-            disabled={!token || !eventId}
+            disabled={(privateCtf && !token) || !eventId}
           />
         </>
       }
     >
-      <AntdInput
-        value={token}
-        onChange={(e) => {
-          setToken(e.target.value);
-        }}
-        placeholder="Токен CTF"
-      />
+      <Flex vertical gap="small">
+        {privateCtf && (
+          <AntdInput
+            value={token}
+            onChange={(e) => {
+              setToken(e.target.value);
+            }}
+            placeholder="Токен CTF"
+          />
+        )}
+        <Typography.Text type="danger">
+          <ExclamationCircleOutlined />
+          После вступления <strong>изменение команды</strong> будет недоступно
+        </Typography.Text>
+      </Flex>
     </AntdModal>
   );
 };

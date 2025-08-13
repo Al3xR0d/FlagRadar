@@ -7,6 +7,8 @@ import { AntdLink } from '@/shared/ui/Link';
 import { CustomSpin } from '@/shared/ui/Spin';
 import { Icon } from '@/shared/ui/Icon';
 import { ColumnsType } from 'antd/es/table';
+import { Tags } from '@/shared/ui/Tags';
+import { EventsStatus } from '@/types';
 
 interface Props {
   isLoading: boolean;
@@ -46,6 +48,14 @@ export const TeamsTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
     { title: 'УЧАСТНИКИ', dataIndex: 'membersCount', key: 'membersCount', align: 'center' },
     { title: 'BB SCORE', dataIndex: 'score_bb', key: 'score_bb', align: 'center' },
     { title: 'CTF SCORE', dataIndex: 'score_ctf', key: 'score_ctf', align: 'center' },
+    {
+      title: 'СТАТУС',
+      dataIndex: 'archival',
+      key: 'archival',
+      align: 'center',
+      render: (status: boolean) =>
+        status ? <Tags $status={EventsStatus.ARCHIVE} /> : <Tags $status={EventsStatus.ACTIVE} />,
+    },
   ];
 
   return (

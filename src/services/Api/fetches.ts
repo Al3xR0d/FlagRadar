@@ -16,7 +16,8 @@ import {
   Question,
   AnswerListResponse,
   Mail,
-  ChangeCaptain,
+  EditTeam,
+  AddTeam,
 } from '@/types';
 import {
   EVENTS_URL,
@@ -112,5 +113,14 @@ export const fetchAI = async (
 export const sendMail = ({ eventId, data }: { eventId: string; data: Mail }) =>
   api.POST(`${MAIL_URL}/${eventId}/send`, { data });
 
-export const deligateCaptain = ({ teamId, data }: { teamId: string; data: ChangeCaptain }) =>
-  api.POST(`${TEAM_URL}/${teamId}/delegate`, data);
+export const deligateCaptain = ({ teamId, data }: { teamId: string; data: EditTeam }) =>
+  api.PATCH(`${TEAM_URL}/${teamId}/delegate`, data);
+
+export const demoteMember = ({ teamId, data }: { teamId: string; data: EditTeam }) =>
+  api.PATCH(`${TEAM_URL}/${teamId}/demote`, data);
+
+export const deleteTeam = (teamId: string) => api.DELETE(`${TEAM_URL}/${teamId}`);
+
+export const createJWT = (teamId: string) => api.GET(`${TEAM_URL}/${teamId}/support`);
+
+export const addTeam = (data: AddTeam) => api.POST(`${TEAM_URL}/registration`, data);

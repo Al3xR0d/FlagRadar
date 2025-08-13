@@ -30,6 +30,10 @@ import {
   fetchAI,
   sendMail,
   deligateCaptain,
+  demoteMember,
+  deleteTeam,
+  createJWT,
+  addTeam,
 } from '../services/Api';
 import {
   User,
@@ -46,7 +50,8 @@ import {
   Role,
   Question,
   Mail,
-  ChangeCaptain,
+  EditTeam,
+  AddTeam,
 } from '../types';
 import { useUserStore } from '@/store/userStore';
 import notification from 'antd/es/notification';
@@ -177,7 +182,22 @@ export const useEditTeam = () => {
   return useMutation(
     ({ teamId, data }: { teamId: string; data: Teams }) => editTeamInfo(teamId, data),
     {
-      onSuccess: () => qc.invalidateQueries('teamParticipants'),
+      onSuccess: () => {
+        qc.invalidateQueries('teamParticipants');
+        notification.success({
+          message: 'Команда отредактирована',
+          placement: 'topRight',
+        });
+      },
+      onError: (error: any) => {
+        notification.error({
+          message: `Ошибка при редактировании команды: ${
+            error.response?.data || 'Неизвестная ошибка'
+          }`,
+          description: 'Ошибка при редактировании команды',
+          placement: 'topRight',
+        });
+      },
     },
   );
 };
@@ -198,8 +218,13 @@ export const useUserById = (id: string) => {
 
 export const useLeaveTeam = () => {
   const qc = useQueryClient();
+  const clearTeamId = useUserStore((s) => s.clearTeamId);
+
   return useMutation((teamId: string) => leaveTeam(teamId), {
-    onSuccess: () => qc.invalidateQueries('teamParticipants'),
+    onSuccess: () => {
+      clearTeamId();
+      qc.invalidateQueries('teamParticipants');
+    },
   });
 };
 
@@ -291,9 +316,7 @@ export const useDeleteResults = () => {
     onError: (error: any) => {
       console.error('Ошибка при удалении результатов:', error);
       notification.error({
-        message: `Ошибка при удалении результатов: ${
-          error.response?.data?.message || 'Неизвестная ошибка'
-        }`,
+        message: `Ошибка при удалении результатов: ${error.response?.data || 'Неизвестная ошибка'}`,
         description: 'Ошибка при удалении результатов',
         placement: 'topRight',
       });
@@ -336,7 +359,7 @@ export const useSendMail = () => {
     onError: (error: any) => {
       notification.error({
         message: `Ошибка при направлении сообщения: ${
-          error.response?.data?.message || 'Неизвестная ошибка'
+          error.response?.data || 'Неизвестная ошибка'
         }`,
         description: 'Ошибка при направлении сообщения',
         placement: 'topRight',
@@ -346,21 +369,112 @@ export const useSendMail = () => {
 };
 
 export const useDeligateCaptain = () => {
-  return useMutation({
-    mutationFn: ({ teamId, data }: { teamId: string; data: ChangeCaptain }) =>
-      deligateCaptain({ teamId, data }),
+  const qc = useQueryClient();
+  const setCurrentUser = useUserStore((store) => store.setCurrentUser);
+
+  return useMutation(
+    ({ teamId, data }: { teamId: string; data: EditTeam }) => deligateCaptain({ teamId, data }),
+    {
+      onSuccess: async () => {
+        qc.invalidateQueries('teamParticipants');
+        qc.invalidateQueries('currentUser');
+        qc.invalidateQueries('currentUserFull');
+
+        try {
+          const fresh = await fetchCurrentUser();
+          setCurrentUser(fresh);
+        } catch (err) {
+          console.error('Failed to refetch current user after delegate captain', err);
+        }
+
+        notification.success({
+          message: 'Права капитана переданы',
+          placement: 'topRight',
+        });
+      },
+      onError: (error: any) => {
+        notification.error({
+          message: `Ошибка при передачи прав капитана: ${
+            error.response?.data || 'Неизвестная ошибка'
+          }`,
+          description: 'Ошибка при передачи прав капитана',
+          placement: 'topRight',
+        });
+      },
+    },
+  );
+};
+
+export const useDemoteMember = () => {
+  const qc = useQueryClient();
+  return useMutation(
+    ({ teamId, data }: { teamId: string; data: EditTeam }) => demoteMember({ teamId, data }),
+    {
+      onSuccess: () => {
+        qc.invalidateQueries('teamParticipants');
+        qc.invalidateQueries('team');
+        notification.success({
+          message: 'Участник разжалован',
+          placement: 'topRight',
+        });
+      },
+      onError: (error: any) => {
+        notification.error({
+          message: `Ошибка при разжаловании участника: ${
+            error.response?.data || 'Неизвестная ошибка'
+          }`,
+          description: 'Ошибка при разжаловании участника',
+          placement: 'topRight',
+        });
+      },
+    },
+  );
+};
+
+export const useDeleteTeam = () => {
+  const qc = useQueryClient();
+  const clearTeamId = useUserStore((s) => s.clearTeamId);
+
+  return useMutation(deleteTeam, {
     onSuccess: () => {
+      clearTeamId();
+      qc.invalidateQueries('teamParticipants');
       notification.success({
-        message: 'Права капитана переданы',
+        message: 'Команда удалена',
         placement: 'topRight',
       });
     },
     onError: (error: any) => {
       notification.error({
-        message: `Ошибка при передачи прав капитана: ${
-          error.response?.data?.message || 'Неизвестная ошибка'
-        }`,
-        description: 'Ошибка при передачи прав капитана',
+        message: `Ошибка при удалении команды: ${error.response?.data || 'Неизвестная ошибка'}`,
+        description: 'Ошибка при удалении команды',
+        placement: 'topRight',
+      });
+    },
+  });
+};
+
+export const useCreateJWT = () => {
+  return useMutation((teamId: string) => createJWT(teamId));
+};
+
+export const useAddTeam = () => {
+  const qc = useQueryClient();
+  return useMutation((data: AddTeam) => addTeam(data), {
+    onSuccess: () => {
+      qc.invalidateQueries('teamParticipants');
+      qc.invalidateQueries('adminTeams');
+      qc.invalidateQueries('adminUsers');
+      qc.invalidateQueries('team');
+      notification.success({
+        message: 'Команда добавлена',
+        placement: 'topRight',
+      });
+    },
+    onError: (error: any) => {
+      notification.error({
+        message: `Ошибка при добавлении команды: ${error.response?.data || 'Неизвестная ошибка'}`,
+        description: 'Ошибка при добавлении команды',
         placement: 'topRight',
       });
     },

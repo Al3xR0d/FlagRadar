@@ -22,7 +22,7 @@ export const LeaveTeamModal: FC<Props> = ({ open, onClose }) => {
     if (teamId) {
       mutation.mutate(teamId, {
         onSuccess: () => {
-          setTeamId(null);
+          setTeamId;
           notification.success({ message: 'Вы успешно покинули команду' });
           queryClient.invalidateQueries(['team']);
           onClose();

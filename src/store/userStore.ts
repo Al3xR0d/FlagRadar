@@ -7,6 +7,7 @@ interface UserState {
   setCurrentUser: (user: Me) => void;
   teamId: string | null;
   setTeamId: (id: string | null) => void;
+  clearTeamId: () => void;
   rules: string | null;
   setRules: (rule: string) => void;
 }
@@ -18,6 +19,7 @@ export const useUserStore = create<UserState>()(
       setCurrentUser: (user) => set({ currentUser: user }),
       teamId: null,
       setTeamId: (id) => set({ teamId: id }),
+      clearTeamId: () => set({ teamId: null }),
       rules: null,
       setRules: (rule) => set({ rules: rule }),
     }),

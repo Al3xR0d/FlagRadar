@@ -9,6 +9,8 @@ import { useUserStore } from '@/store/userStore';
 import { Icon } from '@/shared/ui/Icon';
 import { StyledCard } from '@/shared/ui/StyledCard';
 import { TransferCaptainModal } from '@/components/Modal/TransferCaptainModal';
+import { DemoteMemberModal } from '@/components/Modal/DemoteMemberModal';
+import { DeleteTeamModal } from '@/components/Modal/DeleteTeamModal';
 
 const Wrapper = styled.span`
   color: #e0e0ff;
@@ -27,6 +29,8 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
   const [isCreateVisibleButton, setCreateVisibleButton] = useState<boolean>(false);
   const [isCreateVisibleCancelButton, setCreateVisibleCancelButton] = useState<boolean>(false);
   const [isTransferCaptainModalOpen, setTransferCaptainModalOpen] = useState<boolean>(false);
+  const [isDemoteMemberModalOpen, setDemoteMemberModalOpen] = useState<boolean>(false);
+  const [isDeleteTeamModalOpen, setDeleteTeamModalOpen] = useState<boolean>(false);
 
   const curentUser = useUserStore((store) => store.currentUser);
   const isCaptain = curentUser?.properties === 'captain';
@@ -48,7 +52,7 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           </ul>
         </Wrapper>
         <Flex gap="large">
-          {(isCaptain && members.length === 1) || !isCaptain ? (
+          {!isCaptain ? (
             <AntdCancelButton
               onClick={() => setCreateVisibleCancelButton(true)}
               icon={
@@ -68,13 +72,33 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           ) : (
             <></>
           )}
-          {isCaptain ? (
+          {isCaptain && members.length > 1 ? (
             <AntdButton
               onClick={() => setTransferCaptainModalOpen(true)}
               icon={
                 <Icon className="fa fa-exchange" color="#0e0e14" marginRight="8" fontSize="15" />
               }
               text="Передать права капитана"
+            />
+          ) : (
+            <></>
+          )}
+          {isCaptain && members.length > 1 ? (
+            <AntdCancelButton
+              onClick={() => setDemoteMemberModalOpen(true)}
+              icon={
+                <Icon className="fa fa-sign-out" color="#eef3ff" marginRight="8" fontSize="15" />
+              }
+              text="Разжаловать участника"
+            />
+          ) : (
+            <></>
+          )}
+          {isCaptain ? (
+            <AntdCancelButton
+              onClick={() => setDeleteTeamModalOpen(true)}
+              icon={<Icon className="fa fa-trash" color="#eef3ff" marginRight="8" fontSize="15" />}
+              text="Расформировать команду"
             />
           ) : (
             <></>
@@ -99,6 +123,19 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           open={isTransferCaptainModalOpen}
           onCancel={() => setTransferCaptainModalOpen(false)}
           members={members}
+        />
+      )}
+      {isDemoteMemberModalOpen && (
+        <DemoteMemberModal
+          open={isDemoteMemberModalOpen}
+          onCancel={() => setDemoteMemberModalOpen(false)}
+          members={members}
+        />
+      )}
+      {isDeleteTeamModalOpen && (
+        <DeleteTeamModal
+          open={isDeleteTeamModalOpen}
+          onCancel={() => setDeleteTeamModalOpen(false)}
         />
       )}
     </>

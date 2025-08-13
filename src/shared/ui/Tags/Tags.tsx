@@ -38,6 +38,12 @@ const statusStyles = {
     border: 1px solid #00ff9d;
     font-weight: 700;
   `,
+  archive: css`
+    background-color: #001f0f;
+    color: #ffd166;
+    border: 1px solid #ffd166;
+    font-weight: 700;
+  `,
 };
 
 const Tag = styled.span<{ $status: EventsStatus }>`
@@ -64,6 +70,8 @@ const Tag = styled.span<{ $status: EventsStatus }>`
             return '#00ff9d';
           case 'registration':
             return '#00ff9d';
+          case 'archive':
+            return '#FFD166';
           default:
             return 'transparent';
         }
@@ -77,6 +85,7 @@ const STATUS_TEXT_MAP: Record<EventsStatus, string> = {
   finished: 'Завершен',
   registration: 'Регистрация',
   cancelled: 'Отменён',
+  archive: 'Архив',
 };
 
 export const Tags: FC<HackTagProps> = ({ $status }) => {

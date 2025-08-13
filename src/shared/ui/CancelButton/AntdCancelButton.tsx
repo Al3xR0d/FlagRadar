@@ -59,7 +59,7 @@ const StyledButton = styled(Button)<StyledButtonProps>`
 
   && {
     min-width: ${({ $compact }) => ($compact ? 'unset' : '132px')};
-    max-width: 180px;
+    /* max-width: 180px; */
     background: #ff4d4f;
     color: #eef3ff;
     border-color: #ff4d4f;

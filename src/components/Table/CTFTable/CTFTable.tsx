@@ -2,6 +2,8 @@ import React, { FC, useMemo, useState, memo, useRef, useEffect } from 'react';
 import { ColumnsType } from 'antd/es/table';
 import Space from 'antd/es/space';
 import Empty from 'antd/es/empty';
+import Flex from 'antd/es/flex';
+import message from 'antd/es/message';
 import { Events, EventsStatus } from '@/types/domain/Events';
 import { AntdTable } from '@/shared/ui/Table';
 import { CTFModal } from '@/components/Modal/CTFModal';
@@ -16,11 +18,11 @@ import { JoinCTFModal } from '@/components/Modal/JoinCTFModal';
 import { LeaveCTFModal } from '@/components/Modal/LeaveCTFModal';
 import { useUploadResults, usefetchResults } from '@/hooks/useQueries';
 import { editNameFormat, NameType } from '@/lib/name';
-import Flex from 'antd/es/flex';
 import { Icon } from '@/shared/ui/Icon';
-import message from 'antd/es/message';
 import { ResultsModal } from '@/components/Modal/ResultsModal';
 import { DeleteResultsModal } from '@/components/Modal/DeleteResultsModal';
+import { useCreateJWT } from '@/hooks/useQueries';
+import { CreateJWTModal } from '@/components/Modal/CreateJWTModal';
 
 interface Props {
   isLoading: boolean;
@@ -39,7 +41,13 @@ export const CTFTable: FC<Props> = memo(
     const [isModalLeaveOpen, setIsModalLeaveOpen] = useState<boolean>(false);
     const [isModalResultsOpen, setIsModalResultsOpen] = useState<boolean>(false);
     const [isModalDeleteResultsOpen, setIsModalDeleteResultOpen] = useState<boolean>(false);
+    const [isModalCreateJWTOpen, setIsModalCreateJWTOpen] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [displayData, setDisplayData] = useState<Events[]>(data || []);
+    const prevDataRef = useRef<Events[] | null>(null);
+
+    const teamId = useUserStore((store) => store.teamId);
 
     const { mutate: fetchResults } = useUploadResults();
     const {
@@ -50,6 +58,13 @@ export const CTFTable: FC<Props> = memo(
     } = usefetchResults({
       eventId: selectedEvent?.uuid || '',
     });
+
+    const {
+      mutate: generateJWT,
+      data: jwtResponse,
+      isLoading: isJWTLoading,
+      error: jwtError,
+    } = useCreateJWT();
 
     const user = useUserStore((store) => store.currentUser);
     const isCaptain = user?.properties === 'captain';
@@ -162,6 +177,46 @@ export const CTFTable: FC<Props> = memo(
       }
     }, [isResultsError, resultsError]);
 
+    useEffect(() => {
+      const incoming = data || [];
+      if (!prevDataRef.current) {
+        setDisplayData(incoming);
+        prevDataRef.current = incoming;
+        return;
+      }
+
+      const prev = prevDataRef.current || [];
+      const prevMap = new Map(prev.map((item) => [item.uuid, JSON.stringify(item)]));
+      const currMap = new Map(incoming.map((item) => [item.uuid, JSON.stringify(item)]));
+
+      const added = incoming.filter((item) => !prevMap.has(item.uuid));
+
+      const updated = incoming.filter(
+        (item) => prevMap.has(item.uuid) && prevMap.get(item.uuid) !== currMap.get(item.uuid),
+      );
+
+      if (added.length === 0 && updated.length === 0) {
+        setDisplayData(incoming);
+        prevDataRef.current = incoming;
+        return;
+      }
+
+      const addedIds = new Set(added.map((added) => added.uuid));
+      const updatedIds = new Set(updated.map((updated) => updated.uuid));
+
+      const newFront: Events[] = [
+        ...added,
+        ...updated.filter((updated) => !addedIds.has(updated.uuid)),
+      ];
+
+      const rest = incoming.filter(
+        (item) => !addedIds.has(item.uuid) && !updatedIds.has(item.uuid),
+      );
+
+      setDisplayData([...newFront, ...rest]);
+      prevDataRef.current = incoming;
+    }, [data]);
+
     const columns = useMemo(() => {
       const baseColumns: ColumnsType<Events> = [
         {
@@ -212,7 +267,7 @@ export const CTFTable: FC<Props> = memo(
                 if (onEdit && onDelete) {
                   const isEditDisabled = status === EventsStatus.FINISHED;
                   return (
-                    <Flex gap="middle">
+                    <Flex gap="small">
                       <AntdButton
                         onClick={() => onEdit(record)}
                         icon={<i className="fas fa-edit" />}
@@ -220,6 +275,13 @@ export const CTFTable: FC<Props> = memo(
                         compact
                         showTooltip={true}
                         tooltipText="Редактировать CTF"
+                      />
+                      <AntdButton
+                        onClick={() => onEdit(record)}
+                        icon={<i className="fa fa-download" />}
+                        compact
+                        showTooltip={true}
+                        tooltipText="Скачать JSON"
                       />
                       <AntdCancelButton
                         onClick={() => onDelete(record.uuid)}
@@ -252,6 +314,41 @@ export const CTFTable: FC<Props> = memo(
                             setIsModalLeaveOpen(true);
                           }}
                           text="Покинуть CTF"
+                        />
+                      )}
+                    </Space>
+                  );
+                }
+                if (isCaptain && status === EventsStatus.ACTIVE) {
+                  const isParticipating = isUserParticipating(record.name);
+                  return (
+                    <Space size="middle">
+                      {isParticipating && (
+                        <AntdButton
+                          onClick={() => {
+                            handleSaveCTF(record);
+                            if (!teamId) {
+                              message.error('teamId отсутствует');
+                              return;
+                            }
+
+                            try {
+                              generateJWT(teamId, {
+                                onSuccess: () => {
+                                  setIsModalCreateJWTOpen(true);
+                                },
+                                onError: (err: any) => {
+                                  console.error('JWT generation failed', err);
+                                  message.error('Не удалось сгенерировать JWT');
+                                },
+                              });
+                            } catch (err) {
+                              console.error('generateJWT error', err);
+                              message.error('Не удалось инициировать генерацию JWT');
+                            }
+                          }}
+                          text="Генерация JWT"
+                          disabled={!teamId || isJWTLoading}
                         />
                       )}
                     </Space>
@@ -312,8 +409,17 @@ export const CTFTable: FC<Props> = memo(
           ]
         : [];
 
-      return [...baseColumns, ...actionsColumn, ...resultsColumn];
-    }, [isCaptain, onEdit, onDelete, userEvents, showResultsColumn]);
+      return [...baseColumns, ...resultsColumn, ...actionsColumn];
+    }, [
+      isCaptain,
+      onEdit,
+      onDelete,
+      userEvents,
+      showResultsColumn,
+      teamId,
+      generateJWT,
+      isJWTLoading,
+    ]);
 
     return (
       <>
@@ -324,12 +430,12 @@ export const CTFTable: FC<Props> = memo(
           }}
           rowKey="uuid"
           columns={columns}
-          dataSource={data}
+          dataSource={displayData}
           onChange={onChange}
           title={() => (
             <span>
               <Icon className="fas fa-database" marginRight="8" />
-              Ближайшие CTF
+              Список CTF
             </span>
           )}
           pagination={{ pageSize: 10 }}
@@ -368,6 +474,7 @@ export const CTFTable: FC<Props> = memo(
             onClose={() => setIsModalJoinOpen(false)}
             open={isModalJoinOpen}
             eventId={selectedEvent?.uuid}
+            privateCtf={selectedEvent?.is_private}
           />
         )}
         {isModalLeaveOpen && (
@@ -395,7 +502,17 @@ export const CTFTable: FC<Props> = memo(
             eventId={selectedEvent?.uuid}
           />
         )}
+        {isModalCreateJWTOpen && (
+          <CreateJWTModal
+            open={isModalCreateJWTOpen}
+            onCancel={() => setIsModalCreateJWTOpen(false)}
+            JWT={jwtResponse.data}
+            isLoading={isJWTLoading}
+          />
+        )}
       </>
     );
   },
 );
+
+CTFTable.displayName = 'CTFTable';

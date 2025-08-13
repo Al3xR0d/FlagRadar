@@ -1,8 +1,8 @@
-export type NameType = 'ad' | 'jeopardy';
+export type NameType = 'Attack-Defense' | 'jeopardy';
 
 export const editNameFormat = (name: NameType): string => {
   const nameValues = {
-    ad: 'Attack-Defense',
+    'Attack-Defense': 'Attack-Defense',
     jeopardy: 'Jeopardy (Task based)',
   };
 
