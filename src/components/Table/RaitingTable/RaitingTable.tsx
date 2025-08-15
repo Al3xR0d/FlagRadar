@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useMemo } from 'react';
+import { FC, useState, useRef, useMemo, useCallback } from 'react';
 import { AntdTable } from '@/shared/ui/Table';
 import { AntdSelect } from '@/shared/ui/Select';
 import { Icon } from '@/shared/ui/Icon';
@@ -8,23 +8,18 @@ import { ColumnsType } from 'antd/es/table';
 import { AntdTabs } from '@/shared/ui/Tabs';
 import { useTeamsRaiting } from '@/hooks/useQueries';
 
-interface TeamRating {
+interface RatingBase {
   place: number;
+  score: number;
+  participation: number;
+}
+
+interface TeamRating extends RatingBase {
   teamName: string;
-  score: number;
-  participation: number;
 }
 
-interface PersonalRating {
-  place: number;
+interface PersonalRating extends RatingBase {
   name: string;
-  score: number;
-  participation: number;
-}
-
-interface Option {
-  value: string;
-  label: string;
 }
 
 interface Props {
@@ -32,102 +27,61 @@ interface Props {
 }
 
 export const RaitingTable: FC<Props> = ({ onChange }) => {
-  const [selectedYear, setSelectedYear] = useState<string>(new Date().getFullYear().toString());
-  const [teamPage, setTeamPage] = useState<number>(1);
-  const [userPage, setUserPage] = useState<number>(1);
+  const [selectedYear, setSelectedYear] = useState(() => new Date().getFullYear().toString());
+  const [teamPage, setTeamPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
 
-  const teamTableRef = useRef<HTMLDivElement>(null);
-  const userTableRef = useRef<HTMLDivElement>(null);
+  const teamTableRef = useRef<HTMLDivElement | null>(null);
+  const userTableRef = useRef<HTMLDivElement | null>(null);
 
   const pageSize = 10;
 
-  const { data: teamsData, isLoading: isTeamsLoading } = useTeamsRaiting({
-    year: parseInt(selectedYear),
+  const { data: teamsData, isLoading } = useTeamsRaiting({
+    year: parseInt(selectedYear, 10),
     page: teamPage,
   });
 
-  const years: Option[] = [
-    { value: new Date().getFullYear().toString(), label: new Date().getFullYear().toString() },
-    { value: '2023', label: '2023' },
-    { value: '2022', label: '2022' },
-    { value: '2021', label: '2021' },
-  ];
+  const years = useMemo(
+    () =>
+      Array.from({ length: 5 }, (_, i) => {
+        const year = (new Date().getFullYear() - i).toString();
+        return { value: year, label: year };
+      }),
+    [],
+  );
 
-  const teamsColumns: ColumnsType<TeamRating> = [
-    {
-      title: 'Место',
-      dataIndex: 'place',
-      key: 'place',
-      align: 'center',
+  const assignPlaces = useCallback(
+    <T extends { score: number }>(data: T[]): (T & { place: number })[] => {
+      let lastScore: number | null = null;
+      let currentPlace = 0;
+      return [...data]
+        .sort((a, b) => b.score - a.score)
+        .map((item, index) => {
+          if (item.score !== lastScore) {
+            currentPlace = index + 1;
+            lastScore = item.score;
+          }
+          return { ...item, place: currentPlace };
+        });
     },
-    {
-      title: 'Команда',
-      dataIndex: 'teamName',
-      key: 'teamName',
-      align: 'center',
-    },
-    {
-      title: 'Баллы',
-      dataIndex: 'score',
-      key: 'score',
-      align: 'center',
-    },
-    {
-      title: 'Участий в CTF',
-      dataIndex: 'participation',
-      key: 'participation',
-      align: 'center',
-    },
-  ];
+    [],
+  );
 
-  const usersColumns: ColumnsType<PersonalRating> = [
-    {
-      title: 'Место',
-      dataIndex: 'place',
-      key: 'place',
-      align: 'center',
-    },
-    {
-      title: 'Пользователь',
-      dataIndex: 'name',
-      key: 'name',
-      align: 'center',
-    },
-    {
-      title: 'Баллы',
-      dataIndex: 'score',
-      key: 'score',
-      align: 'center',
-    },
-    {
-      title: 'Участий в CTF',
-      dataIndex: 'participation',
-      key: 'participation',
-      align: 'center',
-    },
-  ];
+  const getColumns = useCallback(
+    (nameKey: keyof TeamRating | keyof PersonalRating, nameLabel: string): ColumnsType<any> => [
+      { title: 'Место', dataIndex: 'place', key: 'place', align: 'center' },
+      { title: nameLabel, dataIndex: nameKey, key: String(nameKey), align: 'center' },
+      { title: 'Баллы', dataIndex: 'score', key: 'score', align: 'center' },
+      { title: 'Участий в CTF', dataIndex: 'participation', key: 'participation', align: 'center' },
+    ],
+    [],
+  );
 
-  function assignPlaces<T extends { score: number }>(data: T[]): (T & { place: number })[] {
-    const sorted = [...data].sort((a, b) => b.score - a.score);
-
-    let currentPlace: number = 1;
-    let lastScore: number | null = null;
-    let skip: number = 0;
-
-    return sorted.map((item, index) => {
-      if (item.score !== lastScore) {
-        currentPlace = index + 1;
-        lastScore = item.score;
-      } else {
-        skip++;
-      }
-
-      return {
-        ...item,
-        place: currentPlace,
-      };
-    });
-  }
+  const prepareTableData = useCallback(
+    <T extends { score: number }>(data: T[], page: number) =>
+      assignPlaces(data).slice((page - 1) * pageSize, page * pageSize),
+    [assignPlaces],
+  );
 
   const teamTableData = useMemo(() => {
     const teams =
@@ -135,12 +89,9 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
         teamName: team.teamname,
         score: team.ctf_score,
         participation: team.num_ctf,
-      })) || [];
-
-    const withPlaces = assignPlaces(teams);
-
-    return withPlaces.slice((teamPage - 1) * pageSize, teamPage * pageSize);
-  }, [teamsData, teamPage]);
+      })) ?? [];
+    return prepareTableData(teams, teamPage);
+  }, [teamsData, teamPage, prepareTableData]);
 
   const userTableData = useMemo(() => {
     const users =
@@ -150,34 +101,33 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
           score: team.ctf_score,
           participation: team.num_ctf,
         })),
-      ) || [];
+      ) ?? [];
+    return prepareTableData(users, userPage);
+  }, [teamsData, userPage, prepareTableData]);
 
-    const withPlaces = assignPlaces(users);
+  const totalTeams = teamsData?.data?.length ?? 0;
+  const totalUsers = teamsData?.data?.reduce((acc, t) => acc + t.members.length, 0) ?? 0;
 
-    return withPlaces.slice((userPage - 1) * pageSize, userPage * pageSize);
-  }, [teamsData, userPage]);
+  const handleTableChange = useCallback(
+    (setPage: (page: number) => void, ref: React.RefObject<HTMLDivElement | null>) =>
+      (pagination: any) => {
+        setPage(pagination.current);
+        ref.current?.scrollIntoView({ behavior: 'smooth' });
+        onChange?.(pagination, {}, {}, {});
+      },
+    [onChange],
+  );
 
-  const totalTeams = teamsData?.data?.length || 0;
-  const totalUsers = teamsData?.data?.reduce((acc, team) => acc + team.members.length, 0) || 0;
-
-  const handleTeamTableChange = (pagination: any) => {
-    setTeamPage(pagination.current);
-    if (teamTableRef.current) {
-      teamTableRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-    if (onChange) {
-      onChange(pagination, {}, {}, {});
-    }
-  };
-
-  const handleUserTableChange = (pagination: any) => {
-    setUserPage(pagination.current);
-    if (userTableRef.current) {
-      userTableRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-    if (onChange) {
-      onChange(pagination, {}, {}, {});
-    }
+  const commonTableProps = {
+    loading: { spinning: isLoading, indicator: <CustomSpin /> },
+    locale: {
+      emptyText: (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="Результаты за указанный год отсутствуют"
+        />
+      ),
+    },
   };
 
   return (
@@ -193,74 +143,63 @@ export const RaitingTable: FC<Props> = ({ onChange }) => {
         style={{ width: 120, marginBottom: 16 }}
         placeholder="Выберите год"
       />
-      <AntdTabs>
-        <AntdTabs.TabPane tab="Команды" key="1">
-          <AntdTable
-            loading={{
-              spinning: isTeamsLoading,
-              indicator: <CustomSpin />,
-            }}
-            dataSource={teamTableData}
-            columns={teamsColumns}
-            rowKey="place"
-            title={() => (
-              <>
-                <Icon className="fas fa-line-chart" marginRight="8" />
-                Команды
-              </>
-            )}
-            pagination={{
-              current: teamPage,
-              pageSize,
-              showSizeChanger: false,
-              disabled: isTeamsLoading || teamTableData.length === 0,
-              total: totalTeams,
-            }}
-            locale={{
-              emptyText: (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="Результаты за указанный год отсутствуют"
-                />
-              ),
-            }}
-            onChange={handleTeamTableChange}
-          />
-        </AntdTabs.TabPane>
-        <AntdTabs.TabPane tab="Пользователи" key="2">
-          <AntdTable
-            loading={{
-              spinning: isTeamsLoading,
-              indicator: <CustomSpin />,
-            }}
-            dataSource={userTableData}
-            columns={usersColumns}
-            rowKey="name"
-            title={() => (
-              <>
-                <Icon className="fas fa-line-chart" marginRight="8" />
-                Пользователи
-              </>
-            )}
-            pagination={{
-              current: userPage,
-              pageSize,
-              showSizeChanger: false,
-              disabled: isTeamsLoading || userTableData.length === 0,
-              total: totalUsers,
-            }}
-            locale={{
-              emptyText: (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="Результаты за указанный год отсутствуют"
-                />
-              ),
-            }}
-            onChange={handleUserTableChange}
-          />
-        </AntdTabs.TabPane>
-      </AntdTabs>
+
+      <AntdTabs
+        items={[
+          {
+            key: 'teams',
+            label: 'Команды',
+            children: (
+              <AntdTable
+                {...commonTableProps}
+                dataSource={teamTableData}
+                columns={getColumns('teamName', 'Команда')}
+                rowKey="place"
+                title={() => (
+                  <>
+                    <Icon className="fas fa-line-chart" $marginRight="8px" />
+                    Команды
+                  </>
+                )}
+                pagination={{
+                  current: teamPage,
+                  pageSize,
+                  showSizeChanger: false,
+                  disabled: isLoading || !teamTableData.length,
+                  total: totalTeams,
+                }}
+                onChange={handleTableChange(setTeamPage, teamTableRef)}
+              />
+            ),
+          },
+          {
+            key: 'users',
+            label: 'Пользователи',
+            children: (
+              <AntdTable
+                {...commonTableProps}
+                dataSource={userTableData}
+                columns={getColumns('name', 'Пользователь')}
+                rowKey="name"
+                title={() => (
+                  <>
+                    <Icon className="fas fa-line-chart" $marginRight="8px" />
+                    Пользователи
+                  </>
+                )}
+                pagination={{
+                  current: userPage,
+                  pageSize,
+                  showSizeChanger: false,
+                  disabled: isLoading || !userTableData.length,
+                  total: totalUsers,
+                }}
+                onChange={handleTableChange(setUserPage, userTableRef)}
+              />
+            ),
+          },
+        ]}
+      />
     </>
   );
 };

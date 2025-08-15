@@ -45,9 +45,9 @@ export const AcceptUserModal: React.FC<Props> = ({
   const curUser = useUserStore((store) => store.currentUser?.nickname);
 
   const mutation = useAcceptUser();
-  const events = useCtfQuery();
-  const teams = useTeamsQuery();
-  const users = useUsersQuery();
+  // const events = useCtfQuery();
+  // const teams = useTeamsQuery();
+  // const users = useUsersQuery();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

@@ -21,12 +21,12 @@ const StyledSider = styled(Sider)`
   }
 `;
 
-const LogoWrapper = styled.div<{ collapsed: boolean }>`
+const LogoWrapper = styled.div<{ $collapsed: boolean }>`
   height: 64px;
   display: flex;
   align-items: center;
-  justify-content: ${({ collapsed }) => (collapsed ? 'center' : 'flex-start')};
-  padding: ${({ collapsed }) => (collapsed ? '0' : '0 24px')};
+  justify-content: ${({ $collapsed }) => ($collapsed ? 'center' : 'flex-start')};
+  padding: ${({ $collapsed }) => ($collapsed ? '0' : '0 24px')};
   margin: 6px 0;
   font-size: 24px;
   white-space: nowrap;
@@ -41,9 +41,9 @@ const ShieldIcon = styled.i`
   color: #00ff9d;
 `;
 
-const LogoText = styled.span<{ collapsed: boolean }>`
+const LogoText = styled.span<{ $collapsed: boolean }>`
   margin-left: 8px;
-  opacity: ${({ collapsed }) => (collapsed ? 0 : 1)};
+  opacity: ${({ $collapsed }) => ($collapsed ? 0 : 1)};
   transition: opacity 0.2s ease 0.1s;
   background: linear-gradient(90deg, #00ff9d 0%, #00ffea 50%);
   -webkit-background-clip: text;
@@ -72,7 +72,7 @@ const StyledMenu = styled(Menu)`
 `;
 
 export const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -80,17 +80,17 @@ export const Sidebar = () => {
   const isAdmin = currentUser?.properties === 'org';
 
   const items = [
-    { key: '/user', label: 'Профиль', icon: <i className="fas fa-user" aria-hidden="true" /> },
+    { key: '/user', label: 'Профиль', icon: <i className="fas fa-user" /> },
     ...(!isAdmin
       ? [
           {
             key: '/team',
             label: 'Моя команда',
-            icon: <i className="fas fa-users" aria-hidden="true" />,
+            icon: <i className="fas fa-users" />,
           },
         ]
       : []),
-    { key: '/ctf', label: 'CTF', icon: <i className="fas fa-flag" aria-hidden="true" /> },
+    { key: '/ctf', label: 'CTF', icon: <i className="fas fa-flag" /> },
     { key: '/ai', label: 'AI Помощник', icon: <i className="fas fa-brain" /> },
     { key: '/rating', label: 'Рейтинг', icon: <i className="fas fa-line-chart" /> },
     ...(isAdmin
@@ -98,16 +98,12 @@ export const Sidebar = () => {
           {
             key: '/admin',
             label: 'Админошная',
-            icon: <i className="fas fa-cog" aria-hidden="true" />,
+            icon: <i className="fas fa-cog" />,
           },
-        ]
-      : []),
-    ...(isAdmin
-      ? [
           {
             key: '/mail',
             label: 'Сообщения',
-            icon: <i className="fa fa-envelope" aria-hidden="true" />,
+            icon: <i className="fa fa-envelope" />,
           },
         ]
       : []),
@@ -119,11 +115,11 @@ export const Sidebar = () => {
       className="custom-sider"
       collapsible
       collapsed={collapsed}
-      onCollapse={(value) => setCollapsed(value)}
+      onCollapse={setCollapsed}
     >
-      <LogoWrapper collapsed={collapsed}>
-        <ShieldIcon className="fas fa-shield-alt" aria-hidden="true" />
-        {!collapsed && <LogoText collapsed={collapsed}>FlagRadar</LogoText>}
+      <LogoWrapper $collapsed={collapsed}>
+        <ShieldIcon className="fas fa-shield-alt" />
+        {!collapsed && <LogoText $collapsed={collapsed}>FlagRadar</LogoText>}
       </LogoWrapper>
       <StyledMenu
         theme="dark"

@@ -5,6 +5,7 @@ export interface Teams {
   score_ctf: number;
   token: string;
   uuid: string;
+  archival: boolean;
 }
 
 export interface TeamsListResponse {

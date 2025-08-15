@@ -434,7 +434,7 @@ export const CTFTable: FC<Props> = memo(
           onChange={onChange}
           title={() => (
             <span>
-              <Icon className="fas fa-database" marginRight="8" />
+              <Icon className="fas fa-database" $marginRight="8px" />
               Список CTF
             </span>
           )}

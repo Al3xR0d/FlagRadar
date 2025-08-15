@@ -48,7 +48,7 @@ export const UsersTable: React.FC<Props> = ({ isLoading, data, onChange }) => {
         onChange={onChange}
         title={() => (
           <span>
-            <Icon className="fas fa-database" marginRight="8" />
+            <Icon className="fas fa-database" $marginRight="8px" />
             Пользователи
           </span>
         )}

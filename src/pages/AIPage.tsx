@@ -16,42 +16,29 @@ interface ChatMessage {
 }
 
 const AIPage: React.FC = () => {
-  const [activeKey, setActiveKey] = useState<string>('1');
-  // const [pendingKey, setPendingKey] = useState<string | null>(null);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  const [chats, setChats] = useState<Record<string, ChatMessage[]>>({ '1': [], '2': [] });
+  const [activeKey, setActiveKey] = useState<'1' | '2'>('1');
+  const [chats, setChats] = useState<Record<'1' | '2', ChatMessage[]>>({ '1': [], '2': [] });
 
-  const userRoleByTab: Record<string, Role> = { '1': 'blue', '2': 'red' };
-  const { mutate, error } = useFetchAI();
+  const roleByTab: Record<'1' | '2', Role> = { '1': 'blue', '2': 'red' };
+  const { mutate } = useFetchAI();
   const currentUser = useUserStore((store) => store.currentUser);
 
-  const onTabClick = (key: string) => {
-    if (key === activeKey) return;
-    setActiveKey(key);
-    // setPendingKey(key);
-    // setIsModalOpen(true);
+  const updateMessage = (tab: '1' | '2', messageId: string, content: string, isLoading = false) => {
+    setChats((prev) => {
+      const updated = [...prev[tab]];
+      const idx = updated.findIndex((m) => m.id === messageId);
+      if (idx !== -1) updated[idx] = { ...updated[idx], content, isLoading };
+      return { ...prev, [tab]: updated };
+    });
   };
 
-  // const handleConfirm = () => {
-  //   if (pendingKey) {
-  //     setActiveKey(pendingKey);
-  //   }
-  //   setIsModalOpen(false);
-  //   setPendingKey(null);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  //   setPendingKey(null);
-  // };
-
-  const handleSend = async (tabKey: string, text: string) => {
-    const currentUserRole = userRoleByTab[tabKey];
-    const aiRole = currentUserRole === 'blue' ? 'red' : 'blue';
+  const handleSend = async (tab: '1' | '2', text: string): Promise<void> => {
+    const userRole = roleByTab[tab];
+    const aiRole = userRole === 'blue' ? 'red' : 'blue';
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
-      role: currentUserRole,
+      role: userRole,
       content: text,
     };
     const aiTempMessage: ChatMessage = {
@@ -61,90 +48,65 @@ const AIPage: React.FC = () => {
       isLoading: true,
     };
 
-    setChats((prev) => ({ ...prev, [tabKey]: [...prev[tabKey], userMessage, aiTempMessage] }));
+    setChats((prev) => ({
+      ...prev,
+      [tab]: [...prev[tab], userMessage, aiTempMessage],
+    }));
 
-    const session_id = currentUser?.nickname;
-    if (!session_id) {
-      setChats((prev) => {
-        const updated = [...prev[tabKey]];
-        const idx = updated.findIndex((m) => m.id === aiTempMessage.id);
-        if (idx !== -1) {
-          updated[idx] = {
-            ...aiTempMessage,
-            content: 'Ошибка: пользователь не авторизован',
-            isLoading: false,
-          };
-        }
-        return { ...prev, [tabKey]: updated };
-      });
+    const sessionId = currentUser?.nickname;
+    if (!sessionId) {
+      updateMessage(tab, aiTempMessage.id, 'Ошибка: пользователь не авторизован');
       return;
     }
 
     mutate(
-      { role: currentUserRole, session_id, content: text },
+      { role: userRole, session_id: sessionId, content: text },
       {
-        onSuccess: (data: AnswerListResponse) => {
-          setChats((prev) => {
-            const updated = [...prev[tabKey]];
-            const idx = updated.findIndex((m) => m.id === aiTempMessage.id);
-            if (idx !== -1) {
-              updated[idx] = { ...aiTempMessage, content: data.data.content, isLoading: false };
-            }
-            return { ...prev, [tabKey]: updated };
-          });
-        },
-        onError: () => {
-          setChats((prev) => {
-            const updated = [...prev[tabKey]];
-            const idx = updated.findIndex((m) => m.id === aiTempMessage.id);
-            if (idx !== -1) {
-              updated[idx] = {
-                ...aiTempMessage,
-                content: 'Ошибка: не удалось получить ответ',
-                isLoading: false,
-              };
-            }
-            return { ...prev, [tabKey]: updated };
-          });
-        },
+        onSuccess: (data: AnswerListResponse) =>
+          updateMessage(tab, aiTempMessage.id, data.data.content),
+        onError: () => updateMessage(tab, aiTempMessage.id, 'Ошибка: не удалось получить ответ'),
       },
     );
   };
 
-  const currentTab = chats[activeKey];
+  const tabItems = [
+    {
+      key: '1',
+      label: 'Защитник',
+      children: (
+        <ChatBox
+          messages={chats['1']}
+          onSend={(text) => handleSend('1', text)}
+          userRole={roleByTab['1']}
+        />
+      ),
+    },
+    {
+      key: '2',
+      label: 'Атакующий',
+      children: (
+        <ChatBox
+          messages={chats['2']}
+          onSend={(text) => handleSend('2', text)}
+          userRole={roleByTab['2']}
+        />
+      ),
+    },
+  ];
 
   return (
-    <>
-      <PageContainer vertical>
-        <Header title="AI Помощник" />
-        <span style={{ color: '#EEF3FF' }}>
-          В рамках эксперементальной функции AI помощника доступно 6 одновременных пользователей
-        </span>
-        <AntdTabs activeKey={activeKey} onTabClick={onTabClick}>
-          <AntdTabs.TabPane tab="Защитник" key="1">
-            <ChatBox
-              messages={currentTab}
-              onSend={(text) => handleSend('1', text)}
-              userRole={userRoleByTab['1']}
-            />
-          </AntdTabs.TabPane>
-          <AntdTabs.TabPane tab="Атакующий" key="2">
-            <ChatBox
-              messages={currentTab}
-              onSend={(text) => handleSend('2', text)}
-              userRole={userRoleByTab['2']}
-            />
-          </AntdTabs.TabPane>
-        </AntdTabs>
-        <Footer />
-      </PageContainer>
-      {/* <SubmitAIModal
-        open={isModalOpen}
-        onCancel={handleCancel}
-        handleSubmit={handleConfirm}
-        confirmLoading={false}
-      /> */}
-    </>
+    <PageContainer vertical>
+      <Header title="AI Помощник" />
+      <span style={{ color: '#EEF3FF' }}>
+        В рамках экспериментальной функции AI помощника доступно 6 одновременных пользователей
+      </span>
+      <AntdTabs
+        activeKey={activeKey}
+        onChange={(key: string) => setActiveKey(key as '1' | '2')}
+        items={tabItems}
+      />
+      <Footer />
+    </PageContainer>
   );
 };
 

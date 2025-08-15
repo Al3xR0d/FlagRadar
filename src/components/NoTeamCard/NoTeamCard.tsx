@@ -17,19 +17,28 @@ interface Props {
 export const NoTeamCard: FC<Props> = ({ onCreateTeam, onJoinTeam }) => {
   return (
     <StyledCard>
-      <Icon className="fas fa-users" marginBottom="12" fontSize="20" />
+      <Icon className="fas fa-users" $marginBottom="12px" $fontSize="20px" />
       <Wrapper>
         <p>У вас еще нет команды</p>
       </Wrapper>
       <Flex vertical={true} gap={'middle'} align="flex-start">
         <AntdButton
           onClick={onCreateTeam}
-          icon={<Icon className="fa-solid fa-plus" color="#0e0e14" fontSize="15" marginRight="8" />}
+          icon={
+            <Icon
+              className="fa-solid fa-plus"
+              color="#0e0e14"
+              $fontSize="15px"
+              $marginRight="8px"
+            />
+          }
           text={'Создать команду'}
         />
         <AntdButton
           onClick={onJoinTeam}
-          icon={<Icon className="fas fa-users" color="#0e0e14" fontSize="15" marginRight="8" />}
+          icon={
+            <Icon className="fas fa-users" color="#0e0e14" $fontSize="15px" $marginRight="8px" />
+          }
           text={'Присоединиться'}
         />
       </Flex>

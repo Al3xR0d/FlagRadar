@@ -38,7 +38,7 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
   return (
     <>
       <StyledCard>
-        <Icon className="fas fa-users" fontSize="20" marginBottom="12" />
+        <Icon className="fas fa-users" $fontSize="20px" $marginBottom="12px" />
         <Wrapper>
           <p>{name}</p>
           <p>{`BB: ${scoreBB}`}</p>
@@ -56,7 +56,12 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
             <AntdCancelButton
               onClick={() => setCreateVisibleCancelButton(true)}
               icon={
-                <Icon className="fas fa-door-open" color="#ffffff" marginRight="8" fontSize="15" />
+                <Icon
+                  className="fas fa-door-open"
+                  color="#ffffff"
+                  $marginRight="8px"
+                  $fontSize="15px"
+                />
               }
               text="Покинуть команду"
             />
@@ -66,7 +71,9 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           {isCaptain ? (
             <AntdButton
               onClick={() => setCreateVisibleButton(true)}
-              icon={<Icon className="fas fa-edit" color="#0e0e14" marginRight="8" fontSize="15" />}
+              icon={
+                <Icon className="fas fa-edit" color="#0e0e14" $marginRight="8px" $fontSize="15px" />
+              }
               text="Редактировать"
             />
           ) : (
@@ -76,7 +83,12 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
             <AntdButton
               onClick={() => setTransferCaptainModalOpen(true)}
               icon={
-                <Icon className="fa fa-exchange" color="#0e0e14" marginRight="8" fontSize="15" />
+                <Icon
+                  className="fa fa-exchange"
+                  color="#0e0e14"
+                  $marginRight="8px"
+                  $fontSize="15px"
+                />
               }
               text="Передать права капитана"
             />
@@ -87,7 +99,12 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
             <AntdCancelButton
               onClick={() => setDemoteMemberModalOpen(true)}
               icon={
-                <Icon className="fa fa-sign-out" color="#eef3ff" marginRight="8" fontSize="15" />
+                <Icon
+                  className="fa fa-sign-out"
+                  color="#eef3ff"
+                  $marginRight="8px"
+                  $fontSize="15px"
+                />
               }
               text="Разжаловать участника"
             />
@@ -97,7 +114,9 @@ export const TeamCard: FC<Props> = ({ name, scoreBB, scoreCTF, token, members })
           {isCaptain ? (
             <AntdCancelButton
               onClick={() => setDeleteTeamModalOpen(true)}
-              icon={<Icon className="fa fa-trash" color="#eef3ff" marginRight="8" fontSize="15" />}
+              icon={
+                <Icon className="fa fa-trash" color="#eef3ff" $marginRight="8px" $fontSize="15px" />
+              }
               text="Расформировать команду"
             />
           ) : (

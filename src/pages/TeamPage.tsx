@@ -36,7 +36,7 @@ const TeamPage: React.FC = () => {
   return (
     <>
       <PageContainer vertical>
-        {teamData ? (
+        {teamData && !teamData.archival ? (
           <>
             <Header title="Моя команда" />
             <TeamCard

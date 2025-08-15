@@ -144,12 +144,14 @@ export const CTFModal: React.FC<Props> = ({
               <>
                 <Flex justify="space-between">
                   КОМАНДЫ
-                  <AntdButton
-                    text="Добавить команду"
-                    onClick={() => {
-                      setModalAddTeamOpen(true);
-                    }}
-                  />
+                  {isAdmin && (
+                    <AntdButton
+                      text="Добавить команду"
+                      onClick={() => {
+                        setModalAddTeamOpen(true);
+                      }}
+                    />
+                  )}
                 </Flex>
               </>
             ),
@@ -161,7 +163,14 @@ export const CTFModal: React.FC<Props> = ({
               ),
           },
           {
-            title: 'УЧАСТНИКИ',
+            title: (
+              <>
+                <Flex justify="space-between">
+                  УЧАСТНИКИ
+                  {isAdmin && <AntdButton text="Выгрузить xls" onClick={() => {}} />}
+                </Flex>
+              </>
+            ),
             content:
               participants.length > 0 ? (
                 <AntdTable

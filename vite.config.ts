@@ -25,6 +25,12 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: ['antd'],
     },
+    assetsInclude: ['**/*.gif'],
+    build: {
+      assetsDir: 'assets',
+      manifest: true,
+      sourcemap: mode === 'development',
+    },
     ...serverConfig,
   };
 });

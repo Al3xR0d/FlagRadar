@@ -112,8 +112,8 @@ const AdminPage: React.FC = () => {
                     <Icon
                       className="fa-solid fa-plus"
                       color="#212121"
-                      marginRight="0"
-                      fontSize="15"
+                      $marginRight="0"
+                      $fontSize="15px"
                     />
                   }
                   text={' Создать CTF'}
@@ -122,7 +122,12 @@ const AdminPage: React.FC = () => {
                   disabled={isCTFLoading}
                   loading={isCTFLoading}
                   icon={
-                    <Icon className="fas fa-edit" color="#0e0e14" marginRight="0" fontSize="13" />
+                    <Icon
+                      className="fas fa-edit"
+                      color="#0e0e14"
+                      $marginRight="0"
+                      $fontSize="13px"
+                    />
                   }
                   text={' Правила платформы'}
                   onClick={() => setShowRules(true)}
