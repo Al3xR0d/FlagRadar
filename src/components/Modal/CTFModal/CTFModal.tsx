@@ -18,6 +18,8 @@ import { TextWrapper } from '@/shared/ui/TextWrapper';
 import { AntdButton } from '@/shared/ui/Button';
 import Flex from 'antd/es/flex';
 import { AddTeamModal } from '@/components/Modal/AddTeamModal';
+import { downloadXls } from '@/services/Api';
+import message from 'antd/es/message';
 
 interface Props {
   open: boolean;
@@ -89,6 +91,51 @@ export const CTFModal: React.FC<Props> = ({
   const participants = (name && usersData?.data.filter((user) => user.events.includes(name))) || [];
 
   const uniqueTeamIds = [...new Set(participants.map((user) => user.team_id).filter(Boolean))];
+
+  const handleDownloadXls = async () => {
+    if (!eventId) {
+      message.error('Не указан ID события');
+      return;
+    }
+
+    try {
+      const res: any = await downloadXls(eventId);
+
+      const blob: Blob =
+        res?.data instanceof Blob
+          ? res.data
+          : new Blob([res?.data ?? res], { type: 'application/vnd.ms-excel' });
+
+      const headers = res?.headers ?? {};
+      const cdHeader = headers['content-disposition'] ?? headers['Content-Disposition'];
+      let filename = 'report.xls';
+
+      if (cdHeader) {
+        const match = /filename\*?=([^;]+)/i.exec(cdHeader);
+        if (match && match[1]) {
+          try {
+            filename = decodeURIComponent(match[1].replace(/(^UTF-8''|["'])/g, '').trim());
+          } catch {
+            filename = match[1].replace(/["']/g, '').trim();
+          }
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      message.success('Скачивание началось');
+    } catch (err) {
+      console.error(err);
+      message.error('Не удалось скачать XLS');
+    }
+  };
 
   const participantRows = participants.map((user) => ({
     key: user.uuid,
@@ -167,7 +214,7 @@ export const CTFModal: React.FC<Props> = ({
               <>
                 <Flex justify="space-between">
                   УЧАСТНИКИ
-                  {isAdmin && <AntdButton text="Выгрузить xls" onClick={() => {}} />}
+                  {isAdmin && <AntdButton text="Выгрузить xls" onClick={handleDownloadXls} />}
                 </Flex>
               </>
             ),

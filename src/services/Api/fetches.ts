@@ -124,3 +124,9 @@ export const deleteTeam = (teamId: string) => api.DELETE(`${TEAM_URL}/${teamId}`
 export const createJWT = (teamId: string) => api.GET(`${TEAM_URL}/${teamId}/support`);
 
 export const addTeam = (data: AddTeam) => api.POST(`${TEAM_URL}/registration`, data);
+
+export const downloadJson = (eventdId: string) =>
+  api.GET(`${EVENTS_URL}/${eventdId}/participants`, { responseType: 'blob' });
+
+export const downloadXls = (eventdId: string) =>
+  api.GET(`${EVENTS_URL}/${eventdId}/report`, { responseType: 'blob' });

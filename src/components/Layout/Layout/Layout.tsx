@@ -18,9 +18,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     if (!isLoading) {
-      // const msg = response?.msg;
-
-      // if (msg === 'User not exists' || (msg === undefined && response !== undefined)) {
       if (response === undefined) {
         setShowModal(true);
       }

@@ -14,7 +14,7 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
 `;
 
-type RecipientType = 'none' | 'allUsers' | 'captains' | 'user';
+type RecipientType = 'none' | 'all' | 'captains' | 'user';
 type Recipient = { type: RecipientType; value?: string };
 
 export const MailPage: React.FC = () => {
@@ -120,9 +120,9 @@ export const MailPage: React.FC = () => {
         <span style={{ color: '#EEF3FF' }}>Выберите адресат сообщения</span>
 
         <StyledCheckbox
-          name="allUsers"
-          checked={recipient.type === 'allUsers'}
-          onChange={handleCheckboxChange('allUsers')}
+          name="all"
+          checked={recipient.type === 'all'}
+          onChange={handleCheckboxChange('all')}
         >
           Все пользователи
         </StyledCheckbox>

@@ -23,6 +23,8 @@ import { ResultsModal } from '@/components/Modal/ResultsModal';
 import { DeleteResultsModal } from '@/components/Modal/DeleteResultsModal';
 import { useCreateJWT } from '@/hooks/useQueries';
 import { CreateJWTModal } from '@/components/Modal/CreateJWTModal';
+import { downloadJson } from '@/services/Api';
+import { getFileNameFromContentDisposition } from '@/lib/downloadFiles';
 
 interface Props {
   isLoading: boolean;
@@ -217,6 +219,51 @@ export const CTFTable: FC<Props> = memo(
       prevDataRef.current = incoming;
     }, [data]);
 
+    const handleDownloadJson = async (record: Events) => {
+      if (!record?.uuid) {
+        message.error('Не указан id события');
+        return;
+      }
+
+      try {
+        const res: any = await downloadJson(record.uuid);
+
+        const blob: Blob =
+          res?.data instanceof Blob
+            ? res.data
+            : res instanceof Blob
+            ? res
+            : new Blob([res?.data ?? res], { type: 'application/json' });
+
+        const headers = res?.headers ?? {};
+        const cdHeader = headers['content-disposition'] ?? headers['Content-Disposition'] ?? null;
+        const filenameFromHeader = getFileNameFromContentDisposition(cdHeader);
+        const safeName =
+          filenameFromHeader ||
+          `${(record.name || record.uuid).replace(/[^a-z0-9\-_.]/gi, '_')}-participants.json`;
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = safeName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        message.success('Скачивание началось');
+      } catch (err: any) {
+        console.error('downloadJson error', err);
+        if (err?.response?.data) {
+          try {
+            const text = await err.response.data.text?.();
+            console.warn('response body:', text);
+          } catch {}
+        }
+        message.error('Не удалось скачать JSON');
+      }
+    };
+
     const columns = useMemo(() => {
       const baseColumns: ColumnsType<Events> = [
         {
@@ -277,7 +324,7 @@ export const CTFTable: FC<Props> = memo(
                         tooltipText="Редактировать CTF"
                       />
                       <AntdButton
-                        onClick={() => onEdit(record)}
+                        onClick={() => handleDownloadJson(record)}
                         icon={<i className="fa fa-download" />}
                         compact
                         showTooltip={true}
