@@ -31,6 +31,43 @@ const UserPage: React.FC = () => {
     });
   };
 
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      success();
+    } catch (err) {
+      console.error('Не удалось скопировать текст:', err);
+
+      messageApi.open({
+        type: 'error',
+        content: 'Не удалось скопировать текст. Попробуйте выделить и скопировать вручную.',
+      });
+
+      try {
+        const input = document.createElement('input');
+        input.value = text;
+        input.style.position = 'fixed';
+        input.style.opacity = '0';
+        document.body.appendChild(input);
+        input.select();
+
+        messageApi.open({
+          type: 'info',
+          content: 'Текст выделен. Нажмите Ctrl+C чтобы скопировать',
+          duration: 3,
+        });
+
+        setTimeout(() => {
+          if (document.body.contains(input)) {
+            document.body.removeChild(input);
+          }
+        }, 5000);
+      } catch (fallbackErr) {
+        console.error('Не удалось создать поле для копирования:', fallbackErr);
+      }
+    }
+  };
+
   if (isLoading) {
     return <CustomSpin />;
   }
@@ -71,24 +108,9 @@ const UserPage: React.FC = () => {
                     {data?.jwt ? (
                       <AntdButton
                         icon={<CopyOutlined />}
-                        onClick={async () => {
-                          try {
-                            await navigator.clipboard.writeText(`${data?.jwt || ''}`);
-                            success();
-                          } catch (err) {
-                            const textArea = document.createElement('textarea');
-                            textArea.value = data?.jwt || '';
-                            document.body.appendChild(textArea);
-                            textArea.select();
-                            try {
-                              document.execCommand('copy');
-                              success();
-                            } catch (fallbackErr) {
-                              console.error('Не удалось скопировать текст:', fallbackErr);
-                            }
-                            document.body.removeChild(textArea);
-                          }
-                        }}
+                        onClick={() => copyToClipboard(data?.jwt || '')}
+                        showTooltip={true}
+                        tooltipText="Скопировать JWT"
                       />
                     ) : (
                       ''

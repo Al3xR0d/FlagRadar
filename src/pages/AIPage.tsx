@@ -7,6 +7,7 @@ import { Role, AnswerListResponse } from '@/types';
 import { ChatBox } from '@/shared/ui/ChatBox';
 import { useUserStore } from '@/store/userStore';
 import { useFetchAI } from '@/hooks/useQueries';
+import { AIPlugModal } from '@/components/Modal/AIPlugModal';
 
 interface ChatMessage {
   id: string;
@@ -18,6 +19,7 @@ interface ChatMessage {
 const AIPage: React.FC = () => {
   const [activeKey, setActiveKey] = useState<'1' | '2'>('1');
   const [chats, setChats] = useState<Record<'1' | '2', ChatMessage[]>>({ '1': [], '2': [] });
+  const [plugModalOpen, setPlugModalOpen] = useState(true);
 
   const roleByTab: Record<'1' | '2', Role> = { '1': 'blue', '2': 'red' };
   const { mutate } = useFetchAI();
@@ -95,18 +97,23 @@ const AIPage: React.FC = () => {
   ];
 
   return (
-    <PageContainer vertical>
-      <Header title="AI Помощник" />
-      <span style={{ color: '#EEF3FF' }}>
-        В рамках экспериментальной функции AI помощника доступно 6 одновременных пользователей
-      </span>
-      <AntdTabs
-        activeKey={activeKey}
-        onChange={(key: string) => setActiveKey(key as '1' | '2')}
-        items={tabItems}
-      />
-      <Footer />
-    </PageContainer>
+    <>
+      <PageContainer vertical>
+        <Header title="AI Помощник" />
+        <span style={{ color: '#EEF3FF' }}>
+          В рамках экспериментальной функции AI помощника доступно 6 одновременных пользователей
+        </span>
+        <AntdTabs
+          activeKey={activeKey}
+          onChange={(key: string) => setActiveKey(key as '1' | '2')}
+          items={tabItems}
+        />
+        <Footer />
+      </PageContainer>
+      {plugModalOpen && (
+        <AIPlugModal open={plugModalOpen} onCancel={() => setPlugModalOpen(false)} />
+      )}
+    </>
   );
 };
 
