@@ -7,7 +7,6 @@ import { Role, AnswerListResponse } from '@/types';
 import { ChatBox } from '@/shared/ui/ChatBox';
 import { useUserStore } from '@/store/userStore';
 import { useFetchAI } from '@/hooks/useQueries';
-import { AIPlugModal } from '@/components/Modal/AIPlugModal';
 
 interface ChatMessage {
   id: string;
@@ -110,9 +109,6 @@ const AIPage: React.FC = () => {
         />
         <Footer />
       </PageContainer>
-      {plugModalOpen && (
-        <AIPlugModal open={plugModalOpen} onCancel={() => setPlugModalOpen(false)} />
-      )}
     </>
   );
 };
